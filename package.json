@@ -1,0 +1,37 @@
+{
+  "name": "qb-word",
+  "version": "1.0.0",
+  "description": "A fresh approach to the age old game of wod puzzles",
+  "main": "index.js",
+  "dependencies": {
+    "bootstrap3": "^3.3.5",
+    "gsap": "^1.19.0",
+    "jquery-mobile": "^1.4.1",
+    "stylus": "^0.54.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnshulMalik/qb-front.git"
+  },
+  "keywords": [
+    "qb",
+    "flock",
+    "front-end",
+    "word",
+    "game"
+  ],
+  "author": {
+	"name": "Kaushik Sarma",
+	"email": "kausyap10@gmail.com"
+	"git": "https://github.com/kaushikSarma"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AnshulMalik/qb-front/issues"
+  },
+  "homepage": "https://github.com/AnshulMalik/qb-front#readme"
+}
