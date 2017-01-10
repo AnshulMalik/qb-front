@@ -2,7 +2,16 @@
  * Created by Kaushik on 1/6/2017.
  */
 (function($d, $w, $, t){
-    var $Objects = {},
+    var GameVar = {
+            CurrentSolution: {
+                string: '',
+                face: -1,
+                x: -1,
+                y: -1,
+                hashed: ''
+            }
+        },
+        $Objects = {},
         Controller = {
             isDragging: false,
             isDraggingKey: false,
@@ -62,8 +71,9 @@
         $Objects.CubeFaces = $('figure');
         Functions.InitializeCube();
         $('div.character').on('mouseenter', function(){
-            if(Controller.isSelecting)
-                console.log($(this).find('span').html());
+            if(Controller.isSelecting){
+                GameVar.CurrentSolution.string += $(this).find('span').html();
+            }
         });
         $d.mousedown(function(event) {
                 Controller.mouse.xpos = event.pageX;
@@ -72,6 +82,14 @@
                     Controller.isDragging = true;
                 } else {
                     Controller.isSelecting = true;
+                    var $item = $(event.target);
+                    var c = '';
+                    if($item.is('div')) c = $item.find('span').html();
+                    else if($item.is('span')) c = $item.html();
+                    GameVar.CurrentSolution.string = c;
+                    GameVar.CurrentSolution.face = $item.closest('figure').index() - 2;
+                    GameVar.CurrentSolution.x = Math.floor($item.index()/5);
+                    GameVar.CurrentSolution.y = GameVar.CurrentSolution.face*5 + Math.floor($item.index()%5);
                 }
             })
             .mousemove(function(event) {
@@ -85,8 +103,13 @@
                 }
             })
             .mouseup(function() {
+                var wasSelecting = Controller.isSelecting;
                 Controller.isDragging = false;
                 Controller.isSelecting = false;
+                if(wasSelecting){
+                    GameVar.CurrentSolution.hashed = md4(GameVar.CurrentSolution.x + ',' + GameVar.CurrentSolution.y + ',' + GameVar.CurrentSolution.string);
+                    console.log(GameVar.CurrentSolution);
+                }
             });
         $d.keydown(function(event) {
                 if(event.keyCode === 37)   Functions.RotateLeft(5);
