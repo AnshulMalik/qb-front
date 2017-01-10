@@ -36,16 +36,21 @@
             },
             RotateLeft: function(l){
                 Controller.cube.rotateY -= l/4;
-                t.set($Objects.Cube, {
+                if(Controller.cube.rotateY){
+
+                }
+                t.to($Objects.Cube, 0.2, {
                     transform: 'rotateY(' + Controller.cube.rotateY + 'deg)',
+                    ease: Back.easeOut,
                     onComplete: function(){
                     }
                 });
             },
             RotateRight: function(l){
                 Controller.cube.rotateY += l/4;
-                $Objects.Cube.css({
+                t.to($Objects.Cube, 0.2, {
                     transform: 'rotateY(' + Controller.cube.rotateY + 'deg)',
+                    ease: Back.easeOut,
                     onComplete: function(){
                     }
                 });

@@ -1,0 +1,87 @@
+@import '../../styl/Colors.styl'
+transform(str)
+  -webkit-transform: str
+  -moz-transform: str
+  -ms-transform: str
+  -o-transform: str
+  transform: str
+
+transition(prop, time)
+  -webkit-transition: prop time
+  -moz-transition: prop time
+  -ms-transition: prop time
+  -o-transition: prop time
+  transition: prop time
+
+*
+  box-sizing: border-box
+  margin: 0
+  padding: 0
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
+  list-style: none
+
+body
+  width: 100vw
+  height: 100vh
+  position: static
+  overflow-x: hidden
+  background-color: $White
+  color: $Base2
+
+span.logo
+  &:before
+    content: "q"
+    transform(rotate(45deg))
+  &:after
+    content: "b"
+    transform(rotate(-45deg))
+
+nav.header
+  width: 100vw
+  height: 80px
+  position: fixed
+  background-color: $White
+  border-bottom: 2px solid $Grey
+  text-align: center
+  > .nav-controls
+    height: 80px
+    display: inline-block
+    position: relative
+    > .brand
+      font-weight: 900
+      padding-top: 20px
+      font-size: 20px
+    > span
+      display: inline-block
+      padding-left: 20px
+      padding-right: 20px
+      text-align: center
+      height: 80px
+      vertical-align: center
+      cursor: pointer
+      overflow: hidden
+      > div
+        padding-top: 15px
+        height: 10px
+        &:after
+          content: ""
+          height: 2px
+          width: 60px
+          position: absolute
+          bottom: 0
+          margin-left: -30px
+          transition(all, 0.5s)
+        > span
+          display: block
+        > span.mdi
+          font-size: 30px
+      &:hover
+        > div
+          color: $Accent2
+          opacity: 0.8
+          &:after
+            background-color: $Accent2
+            opacity: 0.8

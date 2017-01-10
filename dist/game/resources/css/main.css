@@ -8,7 +8,7 @@
 body {
   width: 100vw;
   height: 100vh;
-    overflow-x: hidden;
+  overflow-x: hidden;
 }
 .stage {
   margin: 150px auto;
@@ -30,28 +30,27 @@ body {
 }
 .front {
   -webkit-transform: translateZ(200px);
-    background-color: rgb(200, 150, 100);
+  background-color: #c89664;
 }
 .back {
   -webkit-transform: rotateY(180deg) translateZ(200px);
-    background-color: rgb(200, 150, 100);
+  background-color: #c89664;
 }
 .top {
   -webkit-transform: rotateX(90deg) translateZ(200px);
-    background-color: rgb(100, 150, 200);
-
+  background-color: #6496c8;
 }
 .bottom {
   -webkit-transform: rotateX(-90deg) translateZ(200px);
-    background-color: rgb(100, 150, 200);
+  background-color: #6496c8;
 }
 .left {
   -webkit-transform: rotateY(-90deg) translateZ(200px);
-    background-color: rgb(200, 250, 100);
+  background-color: #c8fa64;
 }
 .right {
   -webkit-transform: rotateY(90deg) translateZ(200px);
-    background-color: rgb(200, 250, 100);
+  background-color: #c8fa64;
 }
 figure {
   display: block;
@@ -60,7 +59,7 @@ figure {
   height: 400px;
   background-color: #60c2ef;
   opacity: 0.9;
-    border-radius: 5px;
+  border-radius: 5px;
   -webkit-transform-origin: 50% 50% 0;
   overflow: hidden;
 }

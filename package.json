@@ -4,10 +4,12 @@
   "description": "A fresh approach to the age old game of wod puzzles",
   "main": "index.js",
   "dependencies": {
+    "@angular/platform-browser-dynamic": "^2.4.2",
     "bootstrap3": "^3.3.5",
     "gsap": "^1.19.0",
     "jquery-mobile": "^1.4.1",
-    "stylus": "^0.54.5"
+    "stylus": "^0.54.5",
+    "webpack": "^1.14.0"
   },
   "devDependencies": {},
   "scripts": {
@@ -24,11 +26,7 @@
     "word",
     "game"
   ],
-  "author": {
-	"name": "Kaushik Sarma",
-	"email": "kausyap10@gmail.com"
-	"git": "https://github.com/kaushikSarma"
-  },
+  "author": "Kaushik Sarma <kausyap10@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/AnshulMalik/qb-front/issues"

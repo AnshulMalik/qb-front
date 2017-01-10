@@ -1,0 +1,93 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  list-style: none;
+}
+body {
+  width: 100vw;
+  height: 100vh;
+  position: static;
+  overflow-x: hidden;
+  background-color: #ffffea;
+  color: #89b0ae;
+}
+span.logo:before {
+  content: "q";
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+span.logo:after {
+  content: "b";
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+nav.header {
+  width: 100vw;
+  height: 80px;
+  position: fixed;
+  background-color: #ffffea;
+  border-bottom: 2px solid #d8d8d8;
+  text-align: center;
+}
+nav.header > .nav-controls {
+  height: 80px;
+  display: inline-block;
+  position: relative;
+}
+nav.header > .nav-controls > .brand {
+  font-weight: 900;
+  padding-top: 20px;
+  font-size: 20px;
+}
+nav.header > .nav-controls > span {
+  display: inline-block;
+  padding-left: 20px;
+  padding-right: 20px;
+  text-align: center;
+  height: 80px;
+  vertical-align: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+nav.header > .nav-controls > span > div {
+  padding-top: 15px;
+  height: 10px;
+}
+nav.header > .nav-controls > span > div:after {
+  content: "";
+  height: 2px;
+  width: 60px;
+  position: absolute;
+  bottom: 0;
+  margin-left: -30px;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}
+nav.header > .nav-controls > span > div > span {
+  display: block;
+}
+nav.header > .nav-controls > span > div > span.mdi {
+  font-size: 30px;
+}
+nav.header > .nav-controls > span:hover > div {
+  color: #1a659e;
+  opacity: 0.8;
+}
+nav.header > .nav-controls > span:hover > div:after {
+  background-color: #1a659e;
+  opacity: 0.8;
+}
