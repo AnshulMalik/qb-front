@@ -26,9 +26,8 @@ transition(prop, time)
 body
   width: 100vw
   height: 100vh
-  position: static
   overflow-x: hidden
-  background-color: $White
+  background-color: #ffffff
   color: $Base2
 
 span.logo
@@ -43,9 +42,12 @@ nav.header
   width: 100vw
   height: 80px
   position: fixed
+  top: 0
+  left: 0
   background-color: $White
   border-bottom: 2px solid $Grey
   text-align: center
+  z-index: 1
   > .nav-controls
     height: 80px
     display: inline-block
@@ -85,3 +87,63 @@ nav.header
           &:after
             background-color: $Accent2
             opacity: 0.8
+div.profile
+  position: absolute
+  text-align: center
+  margin-top: 80px
+  padding-bottom: 40px
+  > .slide
+    width: 100vw
+div.user-detail
+  position: relative
+  width: 100vw
+  padding: 30px
+  >img.avatar
+    border-radius: 50%
+    height: 150px
+    width: 150px
+    border: solid 10px $Base1
+    background-color: $Grey
+    box-sizing: content-box
+  >div.user-name
+    width: auto
+    font-size: 2rem
+    font-weight: 600
+    color: $Accent1
+    padding: 10px
+    margin-top: 10px
+.contest-start > div.contest-group
+  border: 2px solid $Accent2
+  border-radius: 10px
+  padding: 20px
+  overflow: hidden
+  transition(all, 0.5s)
+  &:after
+    content: ""
+    background-color: rgba($Accent2, 0.1)
+    height: 100%
+    width: 100%
+    position: absolute
+    top: 100%
+    left: 0
+    transition(all, 0.2s)
+    z-index: -1
+  &:hover
+    border: 2px solid rgba($Accent2, 0.1)
+    &:after
+      top: 0
+  > h4
+    color: $Accent2
+.contest-form
+  > div
+    margin-top: 20px
+    margin-bottom: -10px
+  > input, select
+    padding: 10px
+    margin-top: 10px
+    margin-bottom: 10px
+  > select, button
+    margin-top: 20px
+    margin-bottom: 20px
+  > button
+    font-weight: 600

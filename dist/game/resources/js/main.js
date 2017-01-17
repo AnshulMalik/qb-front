@@ -69,10 +69,13 @@
         $Objects.Cube = $('div.cube');
         Controller.cube.matrix = $Objects.Cube.css('transform');
         $Objects.CubeFaces = $('figure');
+        $Objects.SelectedAnswerDisplay = $('#selected-answer');
         Functions.InitializeCube();
         $('div.character').on('mouseenter', function(){
             if(Controller.isSelecting){
-                GameVar.CurrentSolution.string += $(this).find('span').html();
+                var ch = $(this).find('span').html();
+                GameVar.CurrentSolution.string += ch;
+                $Objects.SelectedAnswerDisplay.append('<span>'+ ch +'</span>');
             }
         });
         $d.mousedown(function(event) {
@@ -87,6 +90,7 @@
                     if($item.is('div')) c = $item.find('span').html();
                     else if($item.is('span')) c = $item.html();
                     GameVar.CurrentSolution.string = c;
+                    $Objects.SelectedAnswerDisplay.html('<span>'+ c +'</span>');
                     GameVar.CurrentSolution.face = $item.closest('figure').index() - 2;
                     GameVar.CurrentSolution.x = Math.floor($item.index()/5);
                     GameVar.CurrentSolution.y = GameVar.CurrentSolution.face*5 + Math.floor($item.index()%5);
