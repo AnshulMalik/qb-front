@@ -4,8 +4,8 @@
 (function($d, $w, $, t){
     var Globals = {
         Contest: {
-              eventToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBJZCI6IjM2NzNjYjMzLTA4YWUtNGVmZS05YmI0LTI3MDQxMzliMzEwZiIsImV4cCI6MTQ4NDgxNzIyOSwidXNlcklkIjoidTp4bjJuNzczMXF6MnpmMzIyIiwiaWF0IjoxNDg0MjEyNDI5LCJqdGkiOiJjM2ZlYzg5MC02MTQ3LTQwNzctYjk4MC0xZTc0M2U0YjBiZTkifQ.j6LiFfClJvS7r56i2M2d8KtnDRDrkCfwMph5yrcrNuQ',
-              userId: 'u:xn2n7731qz2zf322'
+              eventToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBJZCI6IjM2NzNjYjMzLTA4YWUtNGVmZS05YmI0LTI3MDQxMzliMzEwZiIsImV4cCI6MTQ4NTQyMjk5OSwidXNlcklkIjoidTphb295a29peTloaWhtcDhpIiwiaWF0IjoxNDg0ODE4MTk5LCJqdGkiOiJjNDQ4NDA2Yy05MGI3LTQ5MjAtOGQ1NC04NWNjNGQ5YzJjYWQifQ.1BMkf-hz9-ovYUiskdYJsy7QcHLAInatQumP7b4_J04',
+              userId: 'u:aooykoiy9hihmp8i'
             }
         },
         $Objects = {
@@ -17,9 +17,6 @@
             StartSocket: function(){
                 Globals.socket = io.connect('http://localhost:3000/', {query: 'eventToken=' + Globals.Contest.eventToken + '&userId=' + Globals.Contest.userId});
                 Globals.socket.on('list-contacts-complete', Functions.Display);
-            },
-            StartDual: function(){
-
             },
             StartContest: function(){
                 if(Functions.VerifyContest()){
@@ -37,7 +34,6 @@
                 return true;
             },
             Display: function(data) {
-                $Objects.PlayerSelect.find('h3').html('Select Players (' + data.length +')');
                 $Objects.PlayerSelectList.html('');
                 $Objects.PlayersInviteList =  [];
                 for(var i = 0; i < data.length; i++){
@@ -84,15 +80,8 @@
             });
         $Objects.InvitePlayersBtn = $('#send-invites')
             .bind('click', Functions.SendInvites);
-        $Objects.SubmitDual = $('#start-dual')
-            .bind('click', Functions.StartDual);
         $Objects.SubmitContest = $('#start-contest')
             .bind('click', Functions.StartContest);
         $Objects.GameFrame = $('#game-frame');
-        t.to($Objects.GameFrame, 0.5, {
-            height: '100vh',
-            width: '100vw'
-        });
-        console.log($Objects.GameFrame);
     });
 })(jQuery(document), jQuery(window), jQuery, TweenMax);

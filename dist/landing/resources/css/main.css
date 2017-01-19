@@ -203,6 +203,11 @@ div#select-players {
   overflow-y: scroll;
   overflow-x: hidden;
 }
+div#select-players > h3 > input {
+  width: 20px;
+  height: 20px;
+  float: right;
+}
 div#select-players > ul > li {
   color: #1a659e;
   background-color: #ffffea;
