@@ -4,6 +4,7 @@
   "description": "A fresh approach to the age old game of wod puzzles",
   "main": "index.js",
   "dependencies": {
+    "bootstrap-material-design-icons": "^2.2.0",
     "bootstrap3": "^3.3.5",
     "core-js": "^2.4.1",
     "gsap": "^1.19.0",

@@ -3,10 +3,11 @@
  */
 (function($d, $w, $, t){
     var Globals = {
-        Contest: {
+            Contest: {
               eventToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBJZCI6IjM2NzNjYjMzLTA4YWUtNGVmZS05YmI0LTI3MDQxMzliMzEwZiIsImV4cCI6MTQ4NTQyMjk5OSwidXNlcklkIjoidTphb295a29peTloaWhtcDhpIiwiaWF0IjoxNDg0ODE4MTk5LCJqdGkiOiJjNDQ4NDA2Yy05MGI3LTQ5MjAtOGQ1NC04NWNjNGQ5YzJjYWQifQ.1BMkf-hz9-ovYUiskdYJsy7QcHLAInatQumP7b4_J04',
               userId: 'u:aooykoiy9hihmp8i'
-            }
+            },
+            isPLayerListOpen: false
         },
         $Objects = {
 
@@ -30,10 +31,29 @@
                 // Globals.socket.on('list-contacts-complete', Functions.Display);
                 // Globals.socket.on('install-required', Functions.Display);
             },
+            TogglePlayerList: function(){
+                if(!Globals.isPLayerListOpen){
+                    t.to($Objects.PlayerSelect, 0.5, {
+                        left: 0,
+                        onComplete: function(){
+                            Globals.isPLayerListOpen = true;
+                        }
+                    });
+                }
+                else {
+                    t.to($Objects.PlayerSelect, 0.5, {
+                        left: '-300px',
+                        onComplete: function(){
+                            Globals.isPLayerListOpen = false;
+                        }
+                    });
+                }
+            },
             VerifyContest: function(){
                 return true;
             },
             Display: function(data) {
+                Functions.TogglePlayerList();
                 $Objects.PlayerSelectList.html('');
                 $Objects.PlayersInviteList =  [];
                 for(var i = 0; i < data.length; i++){
@@ -82,6 +102,8 @@
             .bind('click', Functions.SendInvites);
         $Objects.SubmitContest = $('#start-contest')
             .bind('click', Functions.StartContest);
+        $Objects.PlayerNaviagtion = $('#player-list-button');
         $Objects.GameFrame = $('#game-frame');
+        $Objects.PlayerNaviagtion.on('click', Functions.TogglePlayerList);
     });
 })(jQuery(document), jQuery(window), jQuery, TweenMax);

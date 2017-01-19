@@ -23,6 +23,8 @@ div#game-frame {
   -webkit-perspective-origin: 50% -240px;
 }
 .cube {
+  color: #000;
+  font-weight: 600;
   -webkit-transform-style: preserve-3d;
   transform-origin: 200px 200px;
   -webkit-transform: rotate3d(0, 1, 0, 45deg);
