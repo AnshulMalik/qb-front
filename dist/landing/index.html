@@ -10,6 +10,7 @@
     <script src="../../node_modules/jquery-mobile/dist/jquery.mobile.min.js" defer></script>
     <script src="../../node_modules/gsap/src/minified/TweenMax.min.js" defer></script>
     <script src="../../node_modules/js-md4/build/md4.min.js" defer></script>
+    <script src="../../src/js/socket.io.js" defer></script>
     <script src="resources/js/main.js" type="text/javascript" defer></script>
 </head>
 <body>
@@ -36,13 +37,18 @@
           <div class="user-name">User Name</div>
         </div>
         <div class="row contest-start">
-            <div class="col-xs-2"></div>
+            <div class="col-xs-4"></div>
             <div class="col-xs-4 contest-group">
               <h4>Start a Contest</h4>
               <div class="contest-form">
                   <input class="col-sm-12" placeholder="Contest Name" regex="" type="text"/>
-                  <input class="col-sm-12" placeholder="Number of questions" regex="[0-9]*" type="number"/>
-                  <div>Select a category</div>
+                  <select class="col-sm-12">
+                      <option>Number of Questions</option>
+                      <option1>5</option1>
+                      <option>10</option>
+                      <option>15</option>
+                      <option>20</option>
+                  </select><div>Select a category</div>
                   <select class="col-sm-12">
                       <option>-none-</option>
                       <option>Javascript</option>
@@ -51,7 +57,8 @@
                   <button id="start-contest" class="btn btn-default">Go<span class="glyphicon glyphicon-chevron-right"></span></button>
               </div>
             </div>
-            <div class="col-xs-4 contest-group">
+            <!--Form for 2 Player contest, feature to be added in the future-->
+            <!-- <div class="col-xs-4 contest-group">
               <h4>Challenge a friend</h4>
               <div class="contest-form">
                   <input class="col-sm-12" placeholder="Name" regex="" type="text"/>
@@ -64,9 +71,16 @@
                   </select>
                   <button id="start-dual" class="btn btn-default">Go<span class="glyphicon glyphicon-chevron-right"></span></button>
               </div>
-            </div>
-            <div class="col-xs-2"></div>
+            </div> -->
+            <div class="col-xs-4"></div>
         </div>
+        <div id="select-players">
+            <input id="toggle-invite-all" type="checkbox"/>
+            <span id="send-invites" class="btn btn-default">Invite</span>
+            <h3>Select players</h3>
+            <ul></ul>
+        </div>
+        <iframe id="game-frame" src="../game/index.html"></iframe>
     </div>
 </body>
 </html>

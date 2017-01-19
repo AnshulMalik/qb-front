@@ -11,9 +11,8 @@
 body {
   width: 100vw;
   height: 100vh;
-  position: static;
   overflow-x: hidden;
-  background-color: #ffffea;
+  background-color: #fff;
   color: #89b0ae;
 }
 span.logo:before {
@@ -36,9 +35,12 @@ nav.header {
   width: 100vw;
   height: 80px;
   position: fixed;
+  top: 0;
+  left: 0;
   background-color: #ffffea;
   border-bottom: 2px solid #d8d8d8;
   text-align: center;
+  z-index: 1;
 }
 nav.header > .nav-controls {
   height: 80px;
@@ -90,4 +92,141 @@ nav.header > .nav-controls > span:hover > div {
 nav.header > .nav-controls > span:hover > div:after {
   background-color: #1a659e;
   opacity: 0.8;
+}
+div.profile {
+  position: absolute;
+  text-align: center;
+  margin-top: 80px;
+  padding-bottom: 40px;
+}
+div.profile > .slide {
+  width: 100vw;
+}
+div.user-detail {
+  position: relative;
+  width: 100vw;
+  padding: 30px;
+}
+div.user-detail >img.avatar {
+  border-radius: 50%;
+  height: 150px;
+  width: 150px;
+  border: solid 10px #ee6055;
+  box-sizing: content-box;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+}
+div.user-detail >img.avatar:hover {
+  -webkit-transform: scale(1.05);
+  -moz-transform: scale(1.05);
+  -ms-transform: scale(1.05);
+  -o-transform: scale(1.05);
+  transform: scale(1.05);
+}
+div.user-detail >div.user-name {
+  width: auto;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #ee6055;
+  padding: 10px;
+  margin-top: 10px;
+}
+.contest-start > div.contest-group {
+  border: 2px solid #1a659e;
+  border-radius: 10px;
+  padding: 20px;
+  overflow: hidden;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}
+.contest-start > div.contest-group:after {
+  content: "";
+  background-color: rgba(26,101,158,0.1);
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+  z-index: -1;
+}
+.contest-start > div.contest-group:hover {
+  border: 2px solid rgba(26,101,158,0.1);
+}
+.contest-start > div.contest-group:hover:after {
+  top: 0;
+}
+.contest-start > div.contest-group > h4 {
+  color: #1a659e;
+}
+.contest-form > div {
+  margin-top: 20px;
+  margin-bottom: -10px;
+}
+.contest-form > input,
+.contest-form select {
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.contest-form > select,
+.contest-form button {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.contest-form > button {
+  font-weight: 600;
+}
+div#select-players {
+  font-weight: 600;
+  position: fixed;
+  z-index: 100;
+  padding: 20px;
+  margin: 0 auto;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 300px;
+  text-align: left;
+  background-color: #d8d8d8;
+  box-shadow: 4px 0 0 rgba(216,216,216,0.5);
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+div#select-players > ul > li {
+  color: #1a659e;
+  background-color: #ffffea;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  padding: 10px;
+  cursor: pointer;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+}
+div#select-players > ul > li:hover {
+  background-color: #1a659e;
+  color: #ffffea;
+  padding-left: 15px;
+  border-left: 6px solid #ffffea;
+}
+div#select-players > ul > li.active {
+  background-color: #1a659e;
+  color: #ffffea;
+  padding-left: 15px;
+  border-left: 6px solid #ee6055;
+  border-right: 6px solid #ee6055;
 }
