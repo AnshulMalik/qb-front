@@ -4,24 +4,14 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  text-align: center;
-}
-::-webkit-scrollbar-track:horizontal {
-  width: 5px;
-  box-shadow: inset 0 1px 0 rgba(220,172,0,0.14), inset 0 -1px 0 rgba(220,172,0,0.07);
-}
-::-webkit-scrollbar-thumb:horizontal {
-  height: 5px;
-  box-shadow: inset 1px 1px 0 rgba(220,172,0,0.1), inset -1px 0 0 rgba(220,172,0,0.07);
 }
 body {
   width: 100vw;
   height: 100vh;
-  background-color: #ee6055;
   overflow-x: hidden;
 }
 .stage {
-  margin: 10px auto;
+  margin: 150px auto;
   text-align: center;
   width: 400px;
   height: 400px;
@@ -111,31 +101,4 @@ figure > div.tile {
 }
 figure > div:hover {
   background-color: rgba(200,50,50,0.5);
-}
-#question-holder {
-  color: #f7c59f;
-}
-#selected-answer {
-  padding: 15px;
-  height: 80px;
-  margin-left: 50%;
-  vertical-align: bottom;
-  transform: translate(-50%, 0);
-  overflow-x: scroll;
-  overflow-y: hidden;
-}
-#selected-answer > span {
-  padding: 10px;
-  background-color: rgba(255,255,234,0.5);
-  border-radius: 4px;
-  border: 2px solid transparent;
-  margin: 2px;
-  font-weight: 700;
-  color: #ffffea;
-  cursor: pointer;
-  transition: all 0.5s;
-}
-#selected-answer > span:hover {
-  background-color: #ffffea;
-  color: #ee6055;
 }
