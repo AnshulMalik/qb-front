@@ -31,12 +31,18 @@ body
   color: $Base2
 
 span.logo
+  margin-left: -50px
+  &:before, &:after
+    position: absolute
+    margin-top: -10px
+    font-size: 4rem
   &:before
     content: "q"
-    transform(rotate(45deg))
+    margin-left: -18px
+    color: $Accent1
   &:after
+    color: $Accent2
     content: "b"
-    transform(rotate(-45deg))
 
 nav.header
   width: 100vw
@@ -58,10 +64,10 @@ nav.header
       font-size: 20px
     > span
       display: inline-block
-      padding-left: 20px
-      padding-right: 20px
       text-align: center
       height: 80px
+      margin-left: 10px
+      margin-right: 10px
       vertical-align: center
       cursor: pointer
       overflow: hidden
@@ -91,7 +97,6 @@ div.profile
   position: absolute
   text-align: center
   margin-top: 80px
-  padding-bottom: 40px
   > .slide
     width: 100vw
 div.user-detail
@@ -137,6 +142,7 @@ div.user-detail
   > h4
     color: $Accent2
 .contest-form
+  margin-bottom: 20px
   > div
     margin-top: 20px
     margin-bottom: -10px
@@ -144,6 +150,7 @@ div.user-detail
     padding: 10px
     margin-top: 10px
     margin-bottom: 10px
+    display: block
   > select, button
     margin-top: 20px
     margin-bottom: 20px
@@ -156,7 +163,7 @@ div#select-players
   z-index: 100
   padding: 20px
   margin: 0 auto
-  left: -300px
+  left: -320px
   top: 0
   height: 100vh
   width: 300px
@@ -191,3 +198,10 @@ div#select-players
       padding-left: 15px
       border-left: 6px solid $Accent1
       border-right: 6px solid $Accent1
+#close-players-list
+    float: right;
+    font-weight: 600;
+    font-size: 30px;
+    cursor: pointer
+    &:hover
+      color: $Accent2

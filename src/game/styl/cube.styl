@@ -9,14 +9,28 @@
   box-shadow: inset 1px 1px 0 rgba(220, 172, 0, .1), inset -1px 0 0 rgba(220, 172, 0, .07);
 
 div#game-frame
-  position: relative
+  position: relative;
   width: 100vw;
-  height: 100vh;
-  background-color: $Accent1
+  padding-top: 20px
+  background-color: $Accent1;
   overflow-x: hidden;
-
+  &:after, &:before
+    position: absolute
+    font-size: 1.5rem
+    font-weight: 600
+    padding: 2px 10px 3px 10px
+    top: 0
+    background-color: $Accent2
+    color: $White
+  &:after
+    content: attr(data-score)
+    left: 0
+  &:before
+    content: attr(data-bonus)
+    right: 15px
 .stage
   margin: 10px auto;
+  margin-bottom: 100px;
   text-align: center;
   width: 400px;
   height: 400px;
@@ -104,8 +118,14 @@ figure
     color: #fff;
   > div:hover
     background-color: rgba(200,50,50,0.5);
-#question-holder
+#question-holder, #question-number
     color: $Base1
+    font-weight: 600
+#question-number
+    color: $White
+    font-size: 20px
+#next-question, #previous-question
+    font-size: 20px
 #selected-answer
     padding: 15px
     height: 80px

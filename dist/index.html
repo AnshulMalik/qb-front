@@ -3,30 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Qb-Profile</title>
-    <link href="../../node_modules/bootstrap-material-design-icons/css/material-icons.css" media="all" rel="stylesheet" type="text/css">
-    <link href="../../node_modules/bootstrap3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../node_modules/bootstrap-material-design-icons/css/material-icons.css" media="all" rel="stylesheet" type="text/css">
+    <link href="../node_modules/bootstrap3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="resources/css/main.css" rel="stylesheet">
     <link href="resources/css/cube.css" rel="stylesheet">
-    <script src="../../node_modules/jquery/dist/jquery.min.js" defer></script>
-    <script src="../../node_modules/jquery-mobile/dist/jquery.mobile.min.js" defer></script>
-    <script src="../../node_modules/gsap/src/minified/TweenMax.min.js" defer></script>
-    <script src="../../node_modules/js-md4/build/md4.min.js" defer></script>
-    <script src="../../src/js/socket.io.js" defer></script>
+    <script src="../node_modules/jquery/dist/jquery.min.js" defer></script>
+    <script src="../node_modules/jquery-mobile/dist/jquery.mobile.min.js" defer></script>
+    <script src="../node_modules/gsap/src/minified/TweenMax.min.js" defer></script>
+    <script src="../node_modules/js-md4/build/md4.min.js" defer></script>
+    <script src="../src/js/socket.io.js" defer></script>
     <script src="resources/js/main.js" type="text/javascript" defer></script>
-    <script src="../../node_modules/js-md4/build/md4.min.js" defer></script>
-    <script src="resources/js/cube.js" defer></script>
+    <script src="../node_modules/js-md4/build/md4.min.js" defer></script>
 </head>
 <body>
     <nav class="header">
         <div class="nav-controls">
-            <span>
-                <div id="player-list-button">
+            <span class="brand"><span class="logo"></span></span>
+            <span id="player-list-button">
+                <div>
                     <span class="mdi mdi-people"></span>
                     <span class="icon-name">Players</span>
                 </div>
             </span>
-            <span class="brand"><span class="logo"></span></span>
-            <span>
+            <span id="player-stats-button">
                 <div>
                     <span class="mdi mdi-multiline-chart"></span>
                     <span class="icon-name">Stats</span>
@@ -81,11 +80,15 @@
         </div>
         <div id="select-players">
             <span id="send-invites" class="btn btn-default">Invite</span>
+            <span id="close-players-list" class="mdi mdi-chevron-left"></span>
             <h3>Select players<input id="toggle-invite-all" type="checkbox"/></h3>
             <ul></ul>
         </div>
-        <div id="game-frame">
-            <h1 id="question-holder">What is the full name of tamnah ?</h1>
+        <div data-score="Score: 000" data-bonus="Bonus: 000" id="game-frame">
+            <div class="btn-group">
+                <span id="previous-question" class="btn mdi mdi-chevron-left"></span><span id="question-number" class="btn">1</span><span id="next-question" class="btn mdi mdi-chevron-right"></span>
+            </div>
+            <h3 id="question-holder">How are functions defined in python ?</h3>
             <div id="selected-answer"></div>
             <div class="stage">
                 <div class="cube">
@@ -97,6 +100,7 @@
                     <figure class="left"></figure>
                 </div>
             </div>
+            <p style="color: white">Click on the red area and drag to rotate the cube, Click and drag over the letters to answer</p>
         </div>
     </div>
 </body>
