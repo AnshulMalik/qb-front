@@ -43,6 +43,9 @@
 
         },
         Functions = {
+            Alert: function(message){
+                $Objects.AlertBox.html(message);
+            },
             //cube control and game rules script
             RandChar: function () {
                 return (function(){
@@ -152,11 +155,14 @@
                 // Globals.socket.on('join-contest-complete', Functions.Display);
                 // Globals.socket.on('message', Functions.Display);
                 // Globals.socket.on('err', Functions.Display);
-                // Globals.socket.on('list-contacts-complete', Functions.Display);
                 // Globals.socket.on('install-required', Functions.Display);
             },
             StartContest: function(){
                 if(Functions.VerifyContest()){
+                    t.set($('.contest-start'), {
+                        display: 'none'
+                    });
+                    Globals.socket.emit('create-contest', {name: 'test', start: Date.now(), numberOfQuestions: 5, participants: ['u:aooykoiy9hihmp8i'], language: 'english'});
                     Globals.socket.emit('get-questions', {contestId: Globals.Contest.contestId})
                 }
             },

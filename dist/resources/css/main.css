@@ -112,7 +112,7 @@ div.user-detail >img.avatar {
   border-radius: 50%;
   height: 150px;
   width: 150px;
-  border: solid 10px #ee6055;
+  border: solid 10px #f7c59f;
   box-sizing: content-box;
   -webkit-transition: all 0.2s;
   -moz-transition: all 0.2s;
@@ -131,7 +131,7 @@ div.user-detail >div.user-name {
   width: auto;
   font-size: 2rem;
   font-weight: 600;
-  color: #ee6055;
+  color: #f7c59f;
   padding: 10px;
   margin-top: 10px;
 }
