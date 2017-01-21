@@ -50,10 +50,13 @@
                     return chars.substr( Math.floor(Math.random() * 26), 1);
                 })();
             },
-            InitializeCube : function(data){
+            GetAllQuestions: function(data){
                 GameVar.Questions = data.data;
-                console.log(data.data);
+                Functions.InitializeCube();
+            },
+            InitializeCube : function(){
                 $Objects.QuestionHolder.html(GameVar.Questions[GameVar.CurrentQuestion].text);
+                $Objects.QuestionNumberHolder.html((GameVar.CurrentQuestion + 1) + ' of ' + GameVar.Questions.length);
                 for (var i = 2; i < 6; i++){
                     $($Objects.CubeFaces[i]).html('');
                     for (var j = 0; j < 25; j++){
@@ -100,15 +103,31 @@
             },
             CheckSolution: function(answer){
                 var index = GameVar.Questions[GameVar.CurrentQuestion]['words'].indexOf(answer);
+                console.log(index);
                 if(index >= 0){
                     GameVar.Score+=5;
-                    GameVar.Questions['words'][index] = '';
-                    console.log($Objects.PlayerStatsButton.after(), GameVar.Score);
-                    $Objects.PlayerStatsButton.attr('data-score', GameVar.Score);
-                    Functions.Alert("Found a bonus word!!");
+                    GameVar.Questions[GameVar.CurrentQuestion]['words'][index] = '';
+                    $Objects.GameFrame.attr('data-score', 'Score: ' + GameVar.Score);
+                    alert("Found a bonus word!!");
                 }
                 else {
-                    console.log(GameVar.Questions['words'].indexOf(answer));
+                    console.log(GameVar.Questions[GameVar.CurrentQuestion]['words'].indexOf(answer));
+                }
+            },
+            NextQuestion: function(){
+                if(GameVar.CurrentQuestion < GameVar.Questions.length - 1){
+                    GameVar.CurrentQuestion++;
+                    Functions.InitializeCube();
+                } else{
+                    console.log('Last question reached');
+                }
+            },
+            PreviousQuestion: function(){
+                if(GameVar.CurrentQuestion > 0){
+                    GameVar.CurrentQuestion--;
+                    Functions.InitializeCube();
+                } else{
+                    console.log('first question reached');
                 }
             },
             //Page controls
@@ -129,7 +148,7 @@
                 // Globals.socket.emit('create-contest', {name: 'Test Contest', start: Date.now(), numberOfQuestions: 10, participants: ['u:aooykoiy9hihmp8i'], language: 'english'});
                 Globals.socket.emit('list-contacts', {'eventToken': Globals.Contest.eventToken});
                 Globals.socket.on('list-contacts-complete', Functions.Display);
-                Globals.socket.on('get-questions-complete', Functions.InitializeCube);
+                Globals.socket.on('get-questions-complete', Functions.GetAllQuestions);
                 // Globals.socket.on('join-contest-complete', Functions.Display);
                 // Globals.socket.on('message', Functions.Display);
                 // Globals.socket.on('err', Functions.Display);
@@ -160,9 +179,19 @@
                 }
             },
             VerifyContest: function(){
-                return (function (){
-                    return true;
-                })();
+                var Contest = {};
+                Contest.Name = $('#contest-name-input').val();
+                Contest.NumberOfQuestions = $('#contest-numq-input').val();
+                Contest.Category = $('#contest-category-input').val();
+                console.log(Contest);
+                if(Contest.Name === '' || Contest.Category === '-none-')
+                {
+                    alert('Please enter a name and select a category');
+                } else{
+                    return (function(){
+                        return true;
+                    })();
+                }
             },
             Display: function(data) {
                 Functions.TogglePlayerList();
@@ -222,8 +251,17 @@
         $('#close-players-list').on('click', Functions.TogglePlayerList);
         Functions.StartSocket();
 
+        $Objects.NextQuestion = $('#next-question')
+            .bind('click', function () {
+                Functions.NextQuestion();
+            });
+        $Objects.PreviousQuestion = $('#previous-question')
+            .bind('click', function () {
+                Functions.PreviousQuestion();
+            });
         // Cube controls and game object bindings
         $Objects.QuestionHolder = $('#question-holder');
+        $Objects.QuestionNumberHolder = $('#question-number');
         $Objects.Cube = $('div.cube');
         Controller.cube.matrix = $Objects.Cube.css('transform');
         $Objects.CubeFaces = $('figure');

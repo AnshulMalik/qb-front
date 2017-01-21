@@ -43,15 +43,16 @@
             <div class="col-xs-4 contest-group">
               <h4>Start a Contest</h4>
               <div class="contest-form">
-                  <input class="col-sm-12" placeholder="Contest Name" regex="" type="text"/>
-                  <select class="col-sm-12">
-                      <option>Number of Questions</option>
-                      <option1>5</option1>
+                  <input id="contest-name-input" class="col-sm-12" placeholder="Contest Name" type="text"/>
+                  <div>Select the number of questions</div>
+                  <select title="Number of question" id="contest-numq-input" class="col-sm-12">
+                      <option>5</option>
                       <option>10</option>
                       <option>15</option>
                       <option>20</option>
-                  </select><div>Select a category</div>
-                  <select class="col-sm-12">
+                  </select>
+                  <div>Select a category</div>
+                  <select title="Category of contest" id="contest-category-input" class="col-sm-12">
                       <option>-none-</option>
                       <option>Javascript</option>
                       <option>Linux/Ubuntu</option>
@@ -81,14 +82,14 @@
         <div id="select-players">
             <span id="send-invites" class="btn btn-default">Invite</span>
             <span id="close-players-list" class="mdi mdi-chevron-left"></span>
-            <h3>Select players<input id="toggle-invite-all" type="checkbox"/></h3>
+            <h3>Select players<input title="select-all checkbox" id="toggle-invite-all" type="checkbox"/></h3>
             <ul></ul>
         </div>
         <div data-score="Score: 000" data-bonus="Bonus: 000" id="game-frame">
             <div class="btn-group">
-                <span id="previous-question" class="btn mdi mdi-chevron-left"></span><span id="question-number" class="btn">1</span><span id="next-question" class="btn mdi mdi-chevron-right"></span>
+                <span id="previous-question" class="btn mdi mdi-chevron-left"></span><span id="question-number" class="btn"></span><span id="next-question" class="btn mdi mdi-chevron-right"></span>
             </div>
-            <h3 id="question-holder">How are functions defined in python ?</h3>
+            <h3 id="question-holder"></h3>
             <div id="selected-answer"></div>
             <div class="stage">
                 <div class="cube">
@@ -100,7 +101,7 @@
                     <figure class="left"></figure>
                 </div>
             </div>
-            <p style="color: white">Click on the red area and drag to rotate the cube, Click and drag over the letters to answer</p>
+            <p style="opacity: 0.5; color: white">Click on the red area and drag to rotate the cube,<br/>Click and drag over the letters to answer</p>
         </div>
     </div>
 </body>
