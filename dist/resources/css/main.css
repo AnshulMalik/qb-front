@@ -36,9 +36,6 @@ span.logo:after {
 nav.header {
   width: 100vw;
   height: 80px;
-  position: fixed;
-  top: 0;
-  left: 0;
   background-color: #ffffea;
   border-bottom: 2px solid #d8d8d8;
   text-align: center;
@@ -98,7 +95,6 @@ nav.header > .nav-controls > span:hover > div:after {
 div.profile {
   position: absolute;
   text-align: center;
-  margin-top: 80px;
 }
 div.profile > .slide {
   width: 100vw;
@@ -106,15 +102,6 @@ div.profile > .slide {
 div.user-detail {
   position: relative;
   width: 100vw;
-  padding: 30px;
-}
-div.user-detail >div.user-name {
-  width: auto;
-  font-size: 2rem;
-  font-weight: 600;
-  color: #f7c59f;
-  padding: 10px;
-  margin-top: 10px;
 }
 .contest-start > div.contest-group {
   border: 2px solid #1a659e;
@@ -251,4 +238,8 @@ div#select-players > ul > li.active {
 #contest-start-timer > div > .label {
   padding-top: 5px;
   font-size: 16px;
+}
+#alert-box {
+  position: fixed;
+  bottom: 0;
 }

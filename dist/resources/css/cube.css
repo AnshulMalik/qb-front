@@ -14,8 +14,7 @@ div#game-frame {
   background-color: #ee6055;
   overflow-x: hidden;
 }
-div#game-frame:after,
-div#game-frame:before {
+div#game-frame:after {
   position: absolute;
   font-size: 1.5rem;
   font-weight: 600;
@@ -28,9 +27,23 @@ div#game-frame:after {
   content: attr(data-score);
   left: 0;
 }
-div#game-frame:before {
-  content: attr(data-bonus);
-  right: 15px;
+div#game-frame >.game-frame-cover {
+  display: none;
+  height: 100%;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(216,216,216,0.6);
+  z-index: 5;
+}
+div#game-frame >.game-frame-cover:after {
+  content: attr(data-result);
+  position: absolute;
+  top: 150px;
+  left: 40%;
+  font-size: 4rem;
+  font-color: #ffffea;
 }
 .stage {
   margin: 10px auto;

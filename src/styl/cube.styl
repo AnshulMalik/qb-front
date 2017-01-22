@@ -15,7 +15,7 @@ div#game-frame
   padding-top: 20px
   background-color: $Accent1;
   overflow-x: hidden;
-  &:after, &:before
+  &:after
     position: absolute
     font-size: 1.5rem
     font-weight: 600
@@ -26,9 +26,22 @@ div#game-frame
   &:after
     content: attr(data-score)
     left: 0
-  &:before
-    content: attr(data-bonus)
-    right: 15px
+  >.game-frame-cover
+    display: none;
+    height: 100%;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba($Grey, 0.6);
+    z-index: 5;
+    &:after
+      content: attr(data-result)
+      position: absolute
+      top: 150px
+      left: 40%
+      font-size: 4rem
+      font-color: $White;
 .stage
   margin: 10px auto;
   margin-bottom: 100px;

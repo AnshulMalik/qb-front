@@ -30,8 +30,8 @@
         },
         Globals = {
             Contest: {
-                eventToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBJZCI6IjM2NzNjYjMzLTA4YWUtNGVmZS05YmI0LTI3MDQxMzliMzEwZiIsImV4cCI6MTQ4NDgxNzIyOSwidXNlcklkIjoidTp4bjJuNzczMXF6MnpmMzIyIiwiaWF0IjoxNDg0MjEyNDI5LCJqdGkiOiJjM2ZlYzg5MC02MTQ3LTQwNzctYjk4MC0xZTc0M2U0YjBiZTkifQ.j6LiFfClJvS7r56i2M2d8KtnDRDrkCfwMph5yrcrNuQ',
-                userId: 'u:xn2n7731qz2zf322',
+                //eventToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBJZCI6IjM2NzNjYjMzLTA4YWUtNGVmZS05YmI0LTI3MDQxMzliMzEwZiIsImV4cCI6MTQ4NDgxNzIyOSwidXNlcklkIjoidTp4bjJuNzczMXF6MnpmMzIyIiwiaWF0IjoxNDg0MjEyNDI5LCJqdGkiOiJjM2ZlYzg5MC02MTQ3LTQwNzctYjk4MC0xZTc0M2U0YjBiZTkifQ.j6LiFfClJvS7r56i2M2d8KtnDRDrkCfwMph5yrcrNuQ',
+                //userId: 'u:xn2n7731qz2zf322',
                 primaryUrl: 'https://b81b9070.ngrok.io/'
             },
             contestId: '',
@@ -40,7 +40,15 @@
             },
             InviteList: [],
             isPLayerListOpen: false,
-            contestTimer: -1
+            contestTimer: -1,
+            Winner: {
+                name: '',
+                Score: 0
+            },
+            Me: {
+                name: '',
+                score: 0,
+            }
         },
         $Objects = {
 
@@ -99,16 +107,13 @@
                 });
             },
             CheckSolution: function(answer){
-                var index = GameVar.Questions[GameVar.CurrentQuestion]['words'].indexOf(answer);
-                console.log(index);
+                var index = GameVar.Questions[GameVar.CurrentQuestion]['words'].indexOf(answer.hashed);
+                console.log("index hashed", index);
                 if(index >= 0){
-                    GameVar.Score+=5;
-                    GameVar.Questions[GameVar.CurrentQuestion]['words'][index] = '';
-                    $Objects.GameFrame.attr('data-score', 'Score: ' + GameVar.Score);
-                    alert("Found a bonus word!!");
+                    Globals.socket.emit('submit-answer', {questionId: GameVar.Questions[GameVar.CurrentQuestion].id, text: answer.y + ',' + answer.x + ',' + answer.string, contestId: Globals.Contest.contestId});
                 }
                 else {
-                    console.log(GameVar.Questions[GameVar.CurrentQuestion]['words'].indexOf(answer));
+                    //console.log(GameVar.Questions[GameVar.CurrentQuestion]['words'].indexOf(answer));
                 }
             },
             NextQuestion: function(){
@@ -136,26 +141,24 @@
                     Globals.Contest[key] = object[1];
                 }
                 Globals.Contest['flockEvent'] = JSON.parse(decodeURIComponent(Globals.Contest['flockEvent']));
-                $Objects.UserName.html('Welcome ' + Globals.Contest.flockEvent['userName'] + ' !');
                 //Start a socket once userId is read from the page url
                 Functions.StartSocket();
-                if(Globals.Contest.flockEvent.button === "attachmentButton"){
+                console.log(Globals.Contest.flockEvent.button, Globals.Contest.flockEvent.button === 'attachmentButton');
+                if(Globals.Contest.flockEvent.button === 'attachmentButton'){
                     Globals.Contest.flockEvent.attachmentId = JSON.parse(Globals.Contest.flockEvent.attachmentId);
                     Globals.Contest.contestId = Globals.Contest.flockEvent.attachmentId.contestId;
-                    Functions.JoinContest();
+                    Globals.NewContest.Start = new Date(Globals.Contest.flockEvent.attachmentId.start);
+                    Globals.NewContest.End = new Date(Globals.Contest.flockEvent.attachmentId.end);
+                    console.log("Dates: ", Globals.NewContest.Start, Globals.NewContest.End);
+                    Globals.socket.emit('join-contest', {contestId: Globals.Contest.contestId});
                 } else {
+                    Globals.socket.emit('list-categories');
+                    Globals.socket.emit('list-contacts', {'eventToken': Globals.Contest['flockEventToken']});
                     t.set($('.contest-form'), {
                         display: 'block'
                     });
                 }
-                console.log(Globals.Contest);
-            },
-            JoinContest: function(){
-                Globals.NewContest = {};
-                Globals.NewContest.Start = Globals.Contest.flockEvent.attachmentId.startTime;
-                Functions.StartNewTimer();
-                Globals.socket.emit('join-contest', {contestId: Globals.Contest.contestId});
-                Globals.socket.on('join-contest-complete', Functions.StartNewTimer);
+                //console.log(Globals.Contest);
             },
             GetAllQuestions: function(questions){
                 GameVar.Questions = questions.data;
@@ -172,7 +175,7 @@
                 }
             },
             StartGame: function(){
-                t.set($('.contest-form'), {
+                t.set($('.contest-start'), {
                     display: 'none'
                 });
                 Globals.socket.emit('get-questions', {contestId: Globals.Contest.contestId});
@@ -183,21 +186,45 @@
             StartSocket: function(){
                 Globals.socket = io.connect(Globals.Contest.primaryUrl, {query: 'eventToken=' + Globals.Contest['flockEventToken'] + '&userId=' + Globals.Contest['flockEvent'].userId});
                 Globals.socket.on('create-contest-complete', function(response){
+                    console.log(response);
                     if(response.status.code === 200){
                         Functions.StartNewTimer();
                         Globals.Contest.contestId = response.data.contestId;
                     } else {
-                        alert('Could not create contest !');
+                        alert('Could not create contest!!');
                     }
                 });
 
                 //Query the list of categories and display them
-                Globals.socket.emit('list-categories');
                 Globals.socket.on('list-categories-complete', Functions.ListCategories);
                 //Query the list of contacts
-                Globals.socket.emit('list-contacts', {'eventToken': Globals.Contest['flockEventToken']});
                 Globals.socket.on('list-contacts-complete', Functions.DisplayInviteList);
+                //On join-contest event complete
+                Globals.socket.on('join-contest-complete', Functions.StartNewTimer);
 
+                //On show-leader event complete
+                Globals.socket.on('show-leaderboard-complete', Functions.ChangeLeaderBoard);
+
+                Globals.socket.on('submit-answer-complete', function(data){
+                    console.log('submit-complete', data);
+                    if(data.status.code === 200){
+                        if(data.data.type === 'answer') {
+                            GameVar.Score = data.data.newScore;
+                            GameVar.Questions[GameVar.CurrentQuestion]['words'][index] = '';
+                            $Objects.GameFrame.attr('data-score', 'Score: ' + GameVar.Score);
+                            alert("Found the correct Answer!!");
+                        } else if(data.data.type === 'bonus'){
+                            GameVar.Score = data.data.newScore;
+                            GameVar.Questions[GameVar.CurrentQuestion]['words'][index] = '';
+                            $Objects.GameFrame.attr('data-score', 'Score: ' + GameVar.Score);
+                            alert("Found a bonus word!!");
+                        } else {
+                            console.log('Not answered');
+                        }
+                    } else{
+
+                    }
+                });
                 //Globals.socket.on('install-required', Functions.Display);
                 //Globals.socket.on('message', Functions.Display);
                 //Globals.socket.on('err', Functions.Display);
@@ -238,6 +265,7 @@
             },
             StartGameTimer: function(){
                 console.log('timing');
+                Globals.socket.emit('show-leaderboard', {contestId: Globals.Contest.contestId});
                 Globals.gameTimer = setInterval(function(){
                     var ctime = Date.now();
                     var remaining = Functions.RemainingTime(ctime, Globals.NewContest.End, $Objects.GameTimer);
@@ -246,7 +274,7 @@
                         $Objects.GameTimer.Hour.html('00');
                         $Objects.GameTimer.Minutes.html('00');
                         $Objects.GameTimer.Seconds.html('00');
-                        Functions.StartGame();
+                        Functions.StopGame();
                     }
                 }, 1000);
             },
@@ -257,27 +285,31 @@
                 Globals.NewContest.Category = $('#contest-category-input').val();
                 var offset = parseInt($('#contest-start-input').val().split(' ')[0]);
                 Globals.NewContest.Start = Date.now() + offset*60*1000;
-                Globals.NewContest.End = Globals.NewContest.Start + 5000*Globals.NewContest.NumberOfQuestions;
+                Globals.NewContest.End = Globals.NewContest.Start + 300000*Globals.NewContest.NumberOfQuestions;
                 console.log(Globals.NewContest);
                 if(Globals.NewContest.Name === '' || Globals.NewContest.Category === '-none-')
                 {
-                    console.log('Please enter a name and select a category');
+                    alert('Please enter a name and select a category');
                 } else {
-                    return (function(){
-                        return true;
-                    })();
+                    return true;
                 }
             },
             DisplayInviteList: function(data) {
                 console.log(data);
                 $Objects.PlayerSelectList.html('');
                 $Objects.PlayersInviteList =  [];
-                for(var i = 0; i < data.length; i++){
-                    var item = $('<li id="' + data[i].id + '">' + data[i].firstName + ' ' + data[i].lastName + ' </li>')
+                for(var i = 0; i < data.data.length; i++){
+                    var item = $('<li id="' + data.data[i].id + '">' + data.data[i].firstName + ' ' + data.data[i].lastName + ' </li>')
                         .bind('click', function(){
-                            if($(this).attr('class') === undefined || $(this).attr('class') === '')     $(this).addClass('active');
+                            if($(this).attr('class') === undefined || $(this).attr('class') === '') {
+                                $(this).addClass('active');
+                                Globals.InviteList.push($(this).attr('id'));
+                            }
                             else {
                                 $(this).removeClass('active');
+                                var id = $(this).attr('id');
+                                console.log('find', Globals.InviteList.indexOf(id));
+                                Globals.InviteList.splice($.inArray(id, Globals.InviteList), 1 );
                                 $Objects.ToggleInviteAll[0].checked = false;
                             }
                         });
@@ -288,6 +320,21 @@
             },
             //Function to list players who have joined the contest, called on 'join-contest-complete'
             ListPlayers: function(data){
+            },
+            ChangeLeaderBoard: function(data){
+                console.log(data);
+                $Objects.PlayerSelect = $('#select-players');
+                $Objects.PlayerSelect('<h3>Scores</h3><ul></ul>');
+                $Objects.PlayerSelectList = $Objects.PlayerSelect.find('ul');
+                for(var i = 0; i < data.data.length; i++){
+                    var item = $('<li class="active" id="' + data.data[i].id + '">' + data.data[i].firstName + ' ' + data.data[i].lastName + '<span class="badge">' + data.data[i].Score + '</span></li>');
+                    $Objects.PlayerSelectList.append(item);
+                    if(data.data[i].newScore > Globals.Winner.Score)
+                    {
+                        Globals.Winner.Score = data.data[i].newScore;
+                        Globals.Winner.name = data.data[i].firstName + ' ' + data.data[i].lastName;
+                    }
+                }
             },
             TogglePlayerList: function(){
                 if(!Globals.isPLayerListOpen){
@@ -319,16 +366,16 @@
                     }
                 }
             },
-            AddInvites: function(){
-                Globals.InviteList = [];
-                var invited = $Objects.PlayerSelectList.find('li');
-                for( var i = 0; i < invited.length; i++ ){
-                    if($(invited[i]).attr('class') === 'active')   Globals.InviteList.push($(invited[i]).attr('id'));
-                }
+            StopGame: function(){
+                Globals.socket.disconnect();
+                Functions.TogglePlayerList();
+                t.set($('.game-frame-cover'), {
+                    display: 'block'
+                });
+                $('.game-frame-cover').after().attr('data-result', 'Winner is ' + Globals.Winner.name + ' ' + Globals.Winner.Score + ' points');
             }
         };
     $d.ready(function(){
-        $Objects.UserName = $('.user-name');
         $Objects.ContestStartTimer = {};
         $Objects.ContestStartTimer.Container = $('#contest-start-timer');
         $Objects.ContestStartTimer.Minutes = $('#contest-start-min');
@@ -347,6 +394,7 @@
         $Objects.PlayerStatsButton = $('#player-stats-button');
         $Objects.GameFrame = $('#game-frame');
         $Objects.PlayerNaviagtion.on('click', Functions.TogglePlayerList);
+        $Objects.PlayerStatsButton.on('click', Functions.TogglePlayerList);
         $('#close-players-list').on('click', Functions.TogglePlayerList);
 
         $Objects.NextQuestion = $('#next-question')
@@ -356,7 +404,7 @@
         // Cube controls and game object bindings
         $Objects.GameTimer = {};
         $Objects.GameTimer.Container = $('#game-timer');
-        $Objects.GameTimer.Hour = $('#game-timer-hour');
+        $Objects.GameTimer.Hours = $('#game-timer-hour');
         $Objects.GameTimer.Minutes = $('#game-timer-min');
         $Objects.GameTimer.Seconds = $('#game-timer-sec');
         $Objects.QuestionHolder = $('#question-holder');
@@ -381,15 +429,22 @@
                 } else {
                     var $item = $(event.target);
                     var c = '';
-                    if($item.is('div')) c = $item.find('span').html();
-                    else if($item.is('span')) c = $item.html();
+                    if($item.is('div')){
+                        c = $item.find('span').html();
+                        GameVar.CurrentSolution.face = $item.closest('figure').index() - 2;
+                        GameVar.CurrentSolution.x = Math.floor($item.index()/5);
+                        GameVar.CurrentSolution.y = GameVar.CurrentSolution.face*5 + Math.floor($item.index()%5);
+                    }
+                    else if($item.is('span')){
+                        c = $item.html();
+                        GameVar.CurrentSolution.face = $item.closest('figure').index() - 2;
+                        GameVar.CurrentSolution.x = Math.floor($item.closest('div').index()/5);
+                        GameVar.CurrentSolution.y = GameVar.CurrentSolution.face*5 + Math.floor($item.closest('div').index()%5);
+                    }
                     if(c !== ''){
                         Controller.isSelecting = true;
                         GameVar.CurrentSolution.string = c;
                         $Objects.SelectedAnswerDisplay.html('<span>'+ c +'</span>');
-                        GameVar.CurrentSolution.face = $item.closest('figure').index() - 2;
-                        GameVar.CurrentSolution.x = Math.floor($item.index()/5);
-                        GameVar.CurrentSolution.y = GameVar.CurrentSolution.face*5 + Math.floor($item.index()%5);
                     }
                 }
             })
@@ -410,7 +465,7 @@
                 if(wasSelecting){
                     GameVar.CurrentSolution.hashed = md4(GameVar.CurrentSolution.y + ',' + GameVar.CurrentSolution.x + ',' + GameVar.CurrentSolution.string);
                     console.log(GameVar.CurrentSolution);
-                    Functions.CheckSolution(GameVar.CurrentSolution.hashed);
+                    Functions.CheckSolution(GameVar.CurrentSolution);
                 }
             });
         $d.mouseup(function() {
@@ -420,7 +475,7 @@
             if(wasSelecting){
                 GameVar.CurrentSolution.hashed = md4(GameVar.CurrentSolution.y + ',' + GameVar.CurrentSolution.x + ',' + GameVar.CurrentSolution.string);
                 console.log(GameVar.CurrentSolution);
-                Functions.CheckSolution(GameVar.CurrentSolution.hashed);
+                Functions.CheckSolution(GameVar.CurrentSolution);
             }
         });
         $d.keydown(function(event) {
