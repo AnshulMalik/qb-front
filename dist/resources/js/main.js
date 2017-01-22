@@ -196,7 +196,7 @@
                 Globals.socket.on('list-categories-complete', Functions.ListCategories);
                 //Query the list of contacts
                 Globals.socket.emit('list-contacts', {'eventToken': Globals.Contest['flockEventToken']});
-                Globals.socket.on('list-contacts-complete', Functions.ListInviteList);
+                Globals.socket.on('list-contacts-complete', Functions.DisplayInviteList);
 
                 //Globals.socket.on('install-required', Functions.Display);
                 //Globals.socket.on('message', Functions.Display);
@@ -268,8 +268,8 @@
                     })();
                 }
             },
-            ListInviteList: function(data) {
-                Functions.TogglePlayerList();
+            DisplayInviteList: function(data) {
+                console.log(data);
                 $Objects.PlayerSelectList.html('');
                 $Objects.PlayersInviteList =  [];
                 for(var i = 0; i < data.length; i++){
@@ -284,6 +284,7 @@
                     $Objects.PlayersInviteList.push(item);
                     $Objects.PlayerSelectList.append(item);
                 }
+                Functions.TogglePlayerList();
             },
             //Function to list players who have joined the contest, called on 'join-contest-complete'
             ListPlayers: function(data){
