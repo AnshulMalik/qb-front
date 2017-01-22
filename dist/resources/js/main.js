@@ -30,14 +30,19 @@
         },
         Globals = {
             Contest: {
-                // eventToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBJZCI6IjM2NzNjYjMzLTA4YWUtNGVmZS05YmI0LTI3MDQxMzliMzEwZiIsImV4cCI6MTQ4NTQyMjk5OSwidXNlcklkIjoidTphb295a29peTloaWhtcDhpIiwiaWF0IjoxNDg0ODE4MTk5LCJqdGkiOiJjNDQ4NDA2Yy05MGI3LTQ5MjAtOGQ1NC04NWNjNGQ5YzJjYWQifQ.1BMkf-hz9-ovYUiskdYJsy7QcHLAInatQumP7b4_J04',
-                // userId: 'u:aooykoiy9hihmp8i'
-                eventToken: '',
-                userId: '',
-                contestId: '5883182fa263df4a9399ccc3',
-                primaryUrl: 'http://af8604b3.ngrok.io/'
+                eventToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBJZCI6IjM2NzNjYjMzLTA4YWUtNGVmZS05YmI0LTI3MDQxMzliMzEwZiIsImV4cCI6MTQ4NDgxNzIyOSwidXNlcklkIjoidTp4bjJuNzczMXF6MnpmMzIyIiwiaWF0IjoxNDg0MjEyNDI5LCJqdGkiOiJjM2ZlYzg5MC02MTQ3LTQwNzctYjk4MC0xZTc0M2U0YjBiZTkifQ.j6LiFfClJvS7r56i2M2d8KtnDRDrkCfwMph5yrcrNuQ',
+                userId: 'u:xn2n7731qz2zf322',
+                primaryUrl: 'https://anshulmalik.me/'
             },
-            isPLayerListOpen: false
+            //eventToken: '',
+            //userId: '',
+            contestId: '5883182fa263df4a9399ccc3',
+            NewContest: {
+
+            },
+            InviteList: [],
+            isPLayerListOpen: false,
+            contestTimer: -1
         },
         $Objects = {
 
@@ -47,17 +52,11 @@
                 $Objects.AlertBox.html(message);
             },
             //cube control and game rules script
-            RandChar: function () {
-                return (function(){
-                    var chars = "ABCDEFGHIJKLMNOPQURSTUVWXYZ";
-                    return chars.substr( Math.floor(Math.random() * 26), 1);
-                })();
-            },
-            GetAllQuestions: function(data){
-                GameVar.Questions = data.data;
-                Functions.InitializeCube();
-            },
             InitializeCube : function(){
+                t.set($Objects.GameFrame, {
+                    display: 'block',
+                    opacity: 1
+                });
                 $Objects.QuestionHolder.html(GameVar.Questions[GameVar.CurrentQuestion].text);
                 $Objects.QuestionNumberHolder.html((GameVar.CurrentQuestion + 1) + ' of ' + GameVar.Questions.length);
                 for (var i = 2; i < 6; i++){
@@ -137,34 +136,155 @@
             GetParams: function(){
                 var params = window.location.search.substr(1).split('&');
                 for(var i in params){
-                    var object = params[i].split('=');
+                    var object = params[parseInt(i)].split('=');
                     var key = object[0];
-                    var value = object[1];
-                    Globals.Contest[key] = value;
-                    console.log(key, value);
+                    Globals.Contest[key] = object[1];
                 }
+                Globals.Contest['flockEvent'] = JSON.parse(decodeURIComponent(Globals.Contest['flockEvent']));
+                $Objects.UserName.html('Welcome ' + Globals.Contest.flockEvent['userName'] + ' !');
+                if(Globals.Contest.flockEvent.button === "attachmentButton"){
+                    Globals.Contest.flockEvent.attachmentId = JSON.parse(Globals.Contest.flockEvent.attachmentId);
+                    Globals.Contest.contestId = Globals.Contest.flockEvent.attachmentId.contestId;
+                    Functions.JoinContest();
+                } else {
+                    t.set($('.contest-form'), {
+                        display: 'block'
+                    });
+                }
+                console.log(Globals.Contest);
+            },
+            JoinContest: function(){
+                Globals.NewContest = {};
+                Globals.NewContest.Start = Globals.Contest.flockEvent.attachmentId.startTime;
+                Globals.socket.emit('join-contest', {contestId: Globals.Contest.contestId});
+                t.set($('.contest-form'), {
+                    display: 'none'
+                });
+                Globals.socket.on('join-contest-complete', Functions.StartNewTimer);
+            },
+            GetAllQuestions: function(questions){
+                GameVar.Questions = questions.data;
+                //Hide the contest start form and display the cube
+                t.set($('.contest-start'), {
+                    display: 'none'
+                });
+                Functions.InitializeCube();
+            },
+            ListCategories: function(categories){
+                console.log(categories, 'Listing');
+                var container = $('#contest-category-input');
+                container.html('<option>-none-</option>');
+                for(var i = 0; i < categories.data.length; i++){
+                    container.append('<option>' +categories.data[i]+ '</option>')
+                }
+            },
+            StartGameTimer: function(){
+
+            },
+            StartGame: function() {
+                Globals.socket.emit('get-questions', {contestId: Globals.Contest.contestId});
+                Globals.socket.on('get-questions-complete', Functions.GetAllQuestions);
             },
             // Functions to trigger socket request on start contest
             // Check for valid data, if invalid data is entered error message is displayed
             StartSocket: function(){
-                Globals.socket = io.connect(Globals.Contest.primaryUrl, {query: 'eventToken=' + Globals.Contest.eventToken + '&userId=' + Globals.Contest.userId});
-                // Globals.socket.emit('create-contest', {name: 'Test Contest', start: Date.now(), numberOfQuestions: 10, participants: ['u:aooykoiy9hihmp8i'], language: 'english'});
+                Globals.socket = io.connect(Globals.Contest.primaryUrl, {query: 'eventToken=' + Globals.Contest['flockEventToken'] + '&userId=' + Globals.Contest['flockEvent'].userId});
+                Globals.socket.on('create-contest-complete', function(response){
+                    if(response.status.code === 200){
+                        Globals.Contest.contestId = response.data.contestId;
+                        Functions.StartNewTimer();
+                    } else {
+                        alert('Could not create contest !');
+                    }
+                });
+
+                //Query the list of categories and display them
+                Globals.socket.emit('list-categories');
+                Globals.socket.on('list-categories-complete', Functions.ListCategories);
+                //Query the list of contacts
                 Globals.socket.emit('list-contacts', {'eventToken': Globals.Contest.eventToken});
-                Globals.socket.on('list-contacts-complete', Functions.Display);
-                Globals.socket.on('get-questions-complete', Functions.GetAllQuestions);
-                // Globals.socket.on('join-contest-complete', Functions.Display);
-                // Globals.socket.on('message', Functions.Display);
-                // Globals.socket.on('err', Functions.Display);
-                // Globals.socket.on('install-required', Functions.Display);
+                Globals.socket.on('list-contacts-complete', Functions.ListInviteList);
+
+                //Globals.socket.on('install-required', Functions.Display);
+                //Globals.socket.on('message', Functions.Display);
+                //Globals.socket.on('err', Functions.Display);
+                //Globals.socket = io.connect(Globals.Contest.primaryUrl, {query: 'eventToken=' + Globals.Contest.eventToken + '&userId=' + Globals.Contest.userId});
             },
             StartContest: function(){
-                if(Functions.VerifyContest()){
-                    t.set($('.contest-start'), {
-                        display: 'none'
-                    });
-                    Globals.socket.emit('create-contest', {name: 'test', start: Date.now(), numberOfQuestions: 5, participants: ['u:aooykoiy9hihmp8i'], language: 'english'});
-                    Globals.socket.emit('get-questions', {contestId: Globals.Contest.contestId})
+                if(confirm(Globals.InviteList.length + ' players invited')){
+                    if(Functions.VerifyContest()){
+                        Globals.socket.emit('create-contest', {name: Globals.NewContest.Name, start: Globals.NewContest.Start, numberOfQuestions: Globals.NewContest.NumberOfQuestions, participants: Globals.InviteList, language: Globals.NewContest.Category});
+                    }
+                } else {
+                    Functions.TogglePlayerList();
                 }
+            },
+            RemainingTime: function(current, reference) {
+               var t = reference - current;
+                var seconds = Math.floor( (t/1000) % 60 );
+                var minutes = Math.floor( (t/1000/60) % 60 );
+                var hours = Math.floor( (t/(1000*60*60)) % 24 );
+                $Objects.ContestStartTimer.Minutes.html(('0' + minutes).slice(-2));
+                $Objects.ContestStartTimer.Seconds.html(('0' + seconds).slice(-2));
+                return {'hour': hours, 'min': minutes, 'sec': seconds, 'total': t};
+            },
+            StartNewTimer: function(){
+                console.log('timing');
+                t.set($('.contest-form'), {display: 'none'});
+                t.set($Objects.ContestStartTimer.Container, {display: 'inline-block'});
+                Globals.contestTimer = setInterval(function(){
+                    var ctime = Date.now();
+                    var remaining = Functions.RemainingTime(ctime, Globals.NewContest.Start);
+                    if(remaining.total < 0) {
+                        clearInterval(Globals.contestTimer);
+                        $Objects.ContestStartTimer.Minutes.html('00');
+                        $Objects.ContestStartTimer.Seconds.html('00');
+                        Functions.StartGame();
+                    }
+                }, 1000);
+            },
+            GetTime: function(timeStamp){
+                var min = timeStamp.getMinutes(),
+                    sec = timeStamp.getSeconds(),
+                    hr = timeStamp.getHours();
+                return {'hour': hr, 'min': min, 'sec': sec};
+            } ,
+            VerifyContest: function(){
+                //console.log((new Date()).getTime(), Date.now());
+                Globals.NewContest.Name = $('#contest-name-input').val();
+                Globals.NewContest.NumberOfQuestions = parseInt($('#contest-numq-input').val());
+                Globals.NewContest.Category = $('#contest-category-input').val();
+                var offset = parseInt($('#contest-start-input').val().split(' ')[0]);
+                Globals.NewContest.Start = Date.now() + offset*60*1000;
+                console.log(Globals.NewContest);
+                if(Globals.NewContest.Name === '' || Globals.NewContest.Category === '-none-')
+                {
+                    console.log('Please enter a name and select a category');
+                } else {
+                    return (function(){
+                        return true;
+                    })();
+                }
+            },
+            ListInviteList: function(data) {
+                Functions.TogglePlayerList();
+                $Objects.PlayerSelectList.html('');
+                $Objects.PlayersInviteList =  [];
+                for(var i = 0; i < data.length; i++){
+                    var item = $('<li id="' + data[i].id + '">' + data[i].firstName + ' ' + data[i].lastName + ' </li>')
+                                .bind('click', function(){
+                                    if($(this).attr('class') === undefined || $(this).attr('class') === '')     $(this).addClass('active');
+                                    else {
+                                        $(this).removeClass('active');
+                                        $Objects.ToggleInviteAll[0].checked = false;
+                                    }
+                                });
+                    $Objects.PlayersInviteList.push(item);
+                    $Objects.PlayerSelectList.append(item);
+                }
+            },
+            //Function to list players who have joined the contest, called on 'join-contest-complete'
+            ListPlayers: function(data){
             },
             TogglePlayerList: function(){
                 if(!Globals.isPLayerListOpen){
@@ -184,38 +304,6 @@
                     });
                 }
             },
-            VerifyContest: function(){
-                var Contest = {};
-                Contest.Name = $('#contest-name-input').val();
-                Contest.NumberOfQuestions = $('#contest-numq-input').val();
-                Contest.Category = $('#contest-category-input').val();
-                console.log(Contest);
-                if(Contest.Name === '' || Contest.Category === '-none-')
-                {
-                    alert('Please enter a name and select a category');
-                } else{
-                    return (function(){
-                        return true;
-                    })();
-                }
-            },
-            Display: function(data) {
-                Functions.TogglePlayerList();
-                $Objects.PlayerSelectList.html('');
-                $Objects.PlayersInviteList =  [];
-                for(var i = 0; i < data.length; i++){
-                    var item = $('<li id="' + data[i].id + '">' + data[i].firstName + ' ' + data[i].lastName + ' </li>')
-                                .bind('click', function(){
-                                    if($(this).attr('class') === undefined || $(this).attr('class') === '')     $(this).addClass('active');
-                                    else {
-                                        $(this).removeClass('active');
-                                        $Objects.ToggleInviteAll[0].checked = false;
-                                    }
-                                });
-                    $Objects.PlayersInviteList.push(item);
-                    $Objects.PlayerSelectList.append(item);
-                }
-            },
             SelectAll: function(state){
                 if(state)   {
                     for(var i = 0; i < $Objects.PlayersInviteList.length; i++){
@@ -228,17 +316,21 @@
                     }
                 }
             },
-            SendInvites: function(){
+            AddInvites: function(){
                 Globals.InviteList = [];
                 var invited = $Objects.PlayerSelectList.find('li');
                 for( var i = 0; i < invited.length; i++ ){
                     if($(invited[i]).attr('class') === 'active')   Globals.InviteList.push($(invited[i]).attr('id'));
                 }
-                console.log(Globals.InviteList);
             }
         };
     $d.ready(function(){
+        $Objects.UserName = $('.user-name');
         Functions.GetParams();
+        $Objects.ContestStartTimer = {};
+        $Objects.ContestStartTimer.Container = $('#contest-start-timer');
+        $Objects.ContestStartTimer.Minutes = $('#contest-start-min');
+        $Objects.ContestStartTimer.Seconds = $('#contest-start-sec');
         $Objects.PlayerSelect = $('#select-players');
         $Objects.PlayerSelectList = $Objects.PlayerSelect.find('ul');
         $Objects.ToggleInviteAll = $('#toggle-invite-all')
@@ -246,8 +338,6 @@
                 if(this.checked)    Functions.SelectAll(true);
                 else if(!this.checked)    Functions.SelectAll(false);
             });
-        $Objects.InvitePlayersBtn = $('#send-invites')
-            .bind('click', Functions.SendInvites);
         $Objects.SubmitContest = $('#start-contest')
             .bind('click', Functions.StartContest);
         $Objects.PlayerNaviagtion = $('#player-list-button');
@@ -255,16 +345,13 @@
         $Objects.GameFrame = $('#game-frame');
         $Objects.PlayerNaviagtion.on('click', Functions.TogglePlayerList);
         $('#close-players-list').on('click', Functions.TogglePlayerList);
+
         Functions.StartSocket();
 
         $Objects.NextQuestion = $('#next-question')
-            .bind('click', function () {
-                Functions.NextQuestion();
-            });
+            .bind('click', Functions.NextQuestion);
         $Objects.PreviousQuestion = $('#previous-question')
-            .bind('click', function () {
-                Functions.PreviousQuestion();
-            });
+            .bind('click', Functions.PreviousQuestion);
         // Cube controls and game object bindings
         $Objects.QuestionHolder = $('#question-holder');
         $Objects.QuestionNumberHolder = $('#question-number');

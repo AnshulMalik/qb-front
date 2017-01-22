@@ -7,7 +7,7 @@
   box-shadow: inset 1px 1px 0 rgba(220,172,0,0.1), inset -1px 0 0 rgba(220,172,0,0.07);
 }
 div#game-frame {
-  display: none;
+  display: none !important;
   position: relative;
   width: 100vw;
   padding-top: 20px;

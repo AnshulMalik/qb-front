@@ -108,25 +108,6 @@ div.user-detail {
   width: 100vw;
   padding: 30px;
 }
-div.user-detail >img.avatar {
-  border-radius: 50%;
-  height: 150px;
-  width: 150px;
-  border: solid 10px #f7c59f;
-  box-sizing: content-box;
-  -webkit-transition: all 0.2s;
-  -moz-transition: all 0.2s;
-  -ms-transition: all 0.2s;
-  -o-transition: all 0.2s;
-  transition: all 0.2s;
-}
-div.user-detail >img.avatar:hover {
-  -webkit-transform: scale(1.05);
-  -moz-transform: scale(1.05);
-  -ms-transform: scale(1.05);
-  -o-transform: scale(1.05);
-  transform: scale(1.05);
-}
 div.user-detail >div.user-name {
   width: auto;
   font-size: 2rem;
@@ -180,16 +161,14 @@ div.user-detail >div.user-name {
 .contest-form > input,
 .contest-form select {
   padding: 10px;
+  width: 100%;
   margin-top: 10px;
   margin-bottom: 10px;
   display: block;
 }
-.contest-form > select,
-.contest-form button {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
 .contest-form > button {
+  margin-bottom: 20px;
+  margin-top: 20px;
   font-weight: 600;
 }
 div#select-players {
@@ -248,4 +227,28 @@ div#select-players > ul > li.active {
 }
 #close-players-list:hover {
   color: #1a659e;
+}
+#contest-start-timer {
+  font-family: sans-serif;
+  display: none;
+  font-weight: 100;
+  text-align: center;
+  font-size: 30px;
+}
+#contest-start-timer > div {
+  color: #fff;
+  padding: 10px;
+  border-radius: 3px;
+  background: #89b0ae;
+  display: inline-block;
+}
+#contest-start-timer > div > span {
+  padding: 15px;
+  border-radius: 3px;
+  background: #ee6055;
+  display: block;
+}
+#contest-start-timer > div > .label {
+  padding-top: 5px;
+  font-size: 16px;
 }

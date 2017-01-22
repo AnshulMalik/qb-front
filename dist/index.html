@@ -16,13 +16,13 @@
     <script src="../node_modules/js-md4/build/md4.min.js" defer></script>
 </head>
 <body>
-    <nav class="header">
-        <div class="nav-controls">
-            <span class="brand"><span class="logo"></span></span>
+<nav class="header">
+    <div class="nav-controls">
+        <span class="brand"><span class="logo"></span></span>
             <span id="player-list-button">
                 <div>
                     <span class="mdi mdi-people"></span>
-                    <span class="icon-name">Players</span>
+                    <span class="icon-name">Invitation</span>
                 </div>
             </span>
             <span id="player-stats-button">
@@ -31,78 +31,92 @@
                     <span class="icon-name">Stats</span>
                 </div>
             </span>
-        </div>
-    </nav>
-    <div class="profile">
-        <div class="user-detail" style="background-color: #ee6055">
-          <img id="user-icon" class="avatar"/>
-          <div class="user-name">User Name</div>
-        </div>
-        <div class="row contest-start">
-            <div class="col-xs-4"></div>
-            <div class="col-xs-4 contest-group">
-              <h4>Start a Contest</h4>
-              <div class="contest-form">
-                  <input id="contest-name-input" class="col-sm-12" placeholder="Contest Name" type="text"/>
-                  <div>Select the number of questions</div>
-                  <select title="Number of question" id="contest-numq-input" class="col-sm-12">
-                      <option>5</option>
-                      <option>10</option>
-                      <option>15</option>
-                      <option>20</option>
-                  </select>
-                  <div>Select a category</div>
-                  <select title="Category of contest" id="contest-category-input" class="col-sm-12">
-                      <option>-none-</option>
-                      <option>Javascript</option>
-                      <option>Linux/Ubuntu</option>
-                  </select>
-                  <button id="start-contest" class="btn btn-default">
-                      Go<span class="glyphicon glyphicon-chevron-right"></span>
-                  </button>
-              </div>
+    </div>
+</nav>
+<div class="profile">
+    <div class="user-detail" style="background-color: #ee6055">
+        <div class="user-name">User Name</div>
+    </div>
+    <div class="row contest-start">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 contest-group">
+            <div class="contest-form">
+                <h3>Start a Contest</h3>
+                <input id="contest-name-input" class="col-sm-12" placeholder="Contest Name" type="text"/>
+                <div>Select the number of questions</div>
+                <select title="Number of question" id="contest-numq-input" class="col-sm-12">
+                    <option>5</option>
+                    <option>10</option>
+                    <option>15</option>
+                    <option>20</option>
+                </select>
+                <div>Select a category</div>
+                <select title="Category of contest" id="contest-category-input" class="col-sm-12">
+                    <option>-none-</option>
+                </select>
+                <div>When do you want to start?</div>
+                <select title="Category of contest" id="contest-start-input" class="col-sm-12">
+                    <option>2 mins from now</option>
+                    <option>5 mins from now</option>
+                    <option>10 mins from now</option>
+                    <option>15 mins from now</option>
+                </select>
+                <button id="start-contest" class="btn btn-default">
+                    Go<span class="glyphicon glyphicon-chevron-right"></span>
+                </button>
             </div>
-            <!--Form for 2 Player contest, feature to be added in the future-->
-            <!-- <div class="col-xs-4 contest-group">
-              <h4>Challenge a friend</h4>
-              <div class="contest-form">
-                  <input class="col-sm-12" placeholder="Name" regex="" type="text"/>
-                  <input class="col-sm-12" placeholder="Number of questions" regex="[0-9]*" type="number"/>
-                  <div>Select a category</div>
-                  <select class="col-sm-12">
-                      <option>-none-</option>
-                      <option>Javascript</option>
-                      <option>Linux/Ubuntu</option>
-                  </select>
-                  <button id="start-dual" class="btn btn-default">Go<span class="glyphicon glyphicon-chevron-right"></span></button>
-              </div>
-            </div> -->
-            <div class="col-xs-4"></div>
-        </div>
-        <div id="select-players">
-            <span id="send-invites" class="btn btn-default">Invite</span>
-            <span id="close-players-list" class="mdi mdi-chevron-left"></span>
-            <h3>Select players<input title="select-all checkbox" id="toggle-invite-all" type="checkbox"/></h3>
-            <ul></ul>
-        </div>
-        <div data-score="Score: 000" data-bonus="Bonus: 000" id="game-frame">
-            <div class="btn-group">
-                <span id="previous-question" class="btn mdi mdi-arrow-back"></span><span id="question-number" class="btn"></span><span id="next-question" class="btn mdi mdi-arrow-forward"></span>
-            </div>
-            <h3 id="question-holder"></h3>
-            <div id="selected-answer"></div>
-            <div class="stage">
-                <div class="cube">
-                    <figure class="top"></figure>
-                    <figure class="bottom"></figure>
-                    <figure class="front"></figure>
-                    <figure class="right"></figure>
-                    <figure class="back"></figure>
-                    <figure class="left"></figure>
+            <div id="contest-start-timer">
+                <h3>Starting in</h3>
+                <div>
+                    <span id="contest-start-min">--</span>
+                    <div class="label">Minutes</div>
+                </div>
+                <div>
+                    <span id="contest-start-sec">--</span>
+                    <div class="label">Seconds</div>
                 </div>
             </div>
-            <p style="opacity: 0.5; color: white">Click on the red area and drag to rotate the cube,<br/>Click and drag over the letters to answer</p>
         </div>
+        <!--Form for 2 Player contest, feature to be added in the future-->
+        <!-- <div class="col-xs-4 contest-group">
+          <h4>Challenge a friend</h4>
+          <div class="contest-form">
+              <input class="col-sm-12" placeholder="Name" regex="" type="text"/>
+              <input class="col-sm-12" placeholder="Number of questions" regex="[0-9]*" type="number"/>
+              <div>Select a category</div>
+              <select class="col-sm-12">
+                  <option>-none-</option>
+                  <option>Javascript</option>
+                  <option>Linux/Ubuntu</option>
+              </select>
+              <button id="start-dual" class="btn btn-default">Go<span class="glyphicon glyphicon-chevron-right"></span></button>
+          </div>
+        </div> -->
+        <div class="col-md-4"></div>
     </div>
+    <div id="select-players">
+        <span id="close-players-list" class="mdi mdi-chevron-left"></span>
+        <h3>Select players<input title="select-all checkbox" id="toggle-invite-all" type="checkbox"/></h3>
+        <ul id="to-invite"></ul>
+    </div>
+    <div data-score="Score: 000" data-bonus="Bonus: 000" id="game-frame">
+        <div class="btn-group">
+            <span id="previous-question" class="btn mdi mdi-arrow-back"></span><span id="question-number" class="btn"></span><span id="next-question" class="btn mdi mdi-arrow-forward"></span>
+        </div>
+        <h3 id="question-holder"></h3>
+        <div id="selected-answer"></div>
+        <div class="stage">
+            <div class="cube">
+                <figure class="top"></figure>
+                <figure class="bottom"></figure>
+                <figure class="front"></figure>
+                <figure class="right"></figure>
+                <figure class="back"></figure>
+                <figure class="left"></figure>
+            </div>
+        </div>
+        <p style="opacity: 0.5; color: white">Click on the red area and drag to rotate the cube,<br/>Click and drag over the letters to answer</p>
+    </div>
+</div>
 </body>
 </html>

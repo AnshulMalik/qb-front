@@ -1,4 +1,4 @@
-@import '../../styl/Colors.styl'
+@import 'Colors.styl'
 transform(str)
   -webkit-transform: str
   -moz-transform: str
@@ -103,15 +103,6 @@ div.user-detail
   position: relative
   width: 100vw
   padding: 30px
-  >img.avatar
-    border-radius: 50%
-    height: 150px
-    width: 150px
-    border: solid 10px $Base1
-    box-sizing: content-box
-    transition(all, 0.2s)
-    &:hover
-      transform(scale(1.05))
   >div.user-name
     width: auto
     font-size: 2rem
@@ -148,13 +139,13 @@ div.user-detail
     margin-bottom: -10px
   > input, select
     padding: 10px
+    width: 100%
     margin-top: 10px
     margin-bottom: 10px
     display: block
-  > select, button
-    margin-top: 20px
-    margin-bottom: 20px
   > button
+    margin-bottom: 20px
+    margin-top: 20px
     font-weight: 600
 
 div#select-players
@@ -205,3 +196,24 @@ div#select-players
     cursor: pointer
     &:hover
       color: $Accent2
+
+#contest-start-timer
+  font-family: sans-serif;
+  display: none;
+  font-weight: 100;
+  text-align: center;
+  font-size: 30px;
+  > div
+    color: #fff;
+    padding: 10px;
+    border-radius: 3px;
+    background: $Base2;
+    display: inline-block;
+    > span
+      padding: 15px;
+      border-radius: 3px;
+      background: $Accent1;
+      display: block;
+    > .label
+      padding-top: 5px;
+      font-size: 16px;
