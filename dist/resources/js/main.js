@@ -34,7 +34,7 @@
                 userId: 'u:xn2n7731qz2zf322',
                 primaryUrl: 'https://b81b9070.ngrok.io/'
             },
-            //contestId: '5883182fa263df4a9399ccc3',
+            contestId: '',
             NewContest: {
 
             },
@@ -195,7 +195,7 @@
                 Globals.socket.emit('list-categories');
                 Globals.socket.on('list-categories-complete', Functions.ListCategories);
                 //Query the list of contacts
-                Globals.socket.emit('list-contacts', {'eventToken': Globals.Contest.eventToken});
+                Globals.socket.emit('list-contacts', {'eventToken': Globals.Contest['flockEventToken']});
                 Globals.socket.on('list-contacts-complete', Functions.ListInviteList);
 
                 //Globals.socket.on('install-required', Functions.Display);
