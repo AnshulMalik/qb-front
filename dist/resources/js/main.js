@@ -32,11 +32,9 @@
             Contest: {
                 eventToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBJZCI6IjM2NzNjYjMzLTA4YWUtNGVmZS05YmI0LTI3MDQxMzliMzEwZiIsImV4cCI6MTQ4NDgxNzIyOSwidXNlcklkIjoidTp4bjJuNzczMXF6MnpmMzIyIiwiaWF0IjoxNDg0MjEyNDI5LCJqdGkiOiJjM2ZlYzg5MC02MTQ3LTQwNzctYjk4MC0xZTc0M2U0YjBiZTkifQ.j6LiFfClJvS7r56i2M2d8KtnDRDrkCfwMph5yrcrNuQ',
                 userId: 'u:xn2n7731qz2zf322',
-                primaryUrl: 'https://anshulmalik.me/'
+                primaryUrl: 'https://b81b9070.ngrok.io/'
             },
-            //eventToken: '',
-            //userId: '',
-            contestId: '5883182fa263df4a9399ccc3',
+            //contestId: '5883182fa263df4a9399ccc3',
             NewContest: {
 
             },
@@ -48,9 +46,6 @@
 
         },
         Functions = {
-            Alert: function(message){
-                $Objects.AlertBox.html(message);
-            },
             //cube control and game rules script
             InitializeCube : function(){
                 t.set($Objects.GameFrame, {
@@ -142,6 +137,8 @@
                 }
                 Globals.Contest['flockEvent'] = JSON.parse(decodeURIComponent(Globals.Contest['flockEvent']));
                 $Objects.UserName.html('Welcome ' + Globals.Contest.flockEvent['userName'] + ' !');
+                //Start a socket once userId is read from the page url
+                Functions.StartSocket();
                 if(Globals.Contest.flockEvent.button === "attachmentButton"){
                     Globals.Contest.flockEvent.attachmentId = JSON.parse(Globals.Contest.flockEvent.attachmentId);
                     Globals.Contest.contestId = Globals.Contest.flockEvent.attachmentId.contestId;
@@ -156,18 +153,14 @@
             JoinContest: function(){
                 Globals.NewContest = {};
                 Globals.NewContest.Start = Globals.Contest.flockEvent.attachmentId.startTime;
+                Functions.StartNewTimer();
                 Globals.socket.emit('join-contest', {contestId: Globals.Contest.contestId});
-                t.set($('.contest-form'), {
-                    display: 'none'
-                });
                 Globals.socket.on('join-contest-complete', Functions.StartNewTimer);
             },
             GetAllQuestions: function(questions){
                 GameVar.Questions = questions.data;
+                Functions.StartGameTimer();
                 //Hide the contest start form and display the cube
-                t.set($('.contest-start'), {
-                    display: 'none'
-                });
                 Functions.InitializeCube();
             },
             ListCategories: function(categories){
@@ -178,10 +171,10 @@
                     container.append('<option>' +categories.data[i]+ '</option>')
                 }
             },
-            StartGameTimer: function(){
-
-            },
-            StartGame: function() {
+            StartGame: function(){
+                t.set($('.contest-form'), {
+                    display: 'none'
+                });
                 Globals.socket.emit('get-questions', {contestId: Globals.Contest.contestId});
                 Globals.socket.on('get-questions-complete', Functions.GetAllQuestions);
             },
@@ -191,8 +184,8 @@
                 Globals.socket = io.connect(Globals.Contest.primaryUrl, {query: 'eventToken=' + Globals.Contest['flockEventToken'] + '&userId=' + Globals.Contest['flockEvent'].userId});
                 Globals.socket.on('create-contest-complete', function(response){
                     if(response.status.code === 200){
-                        Globals.Contest.contestId = response.data.contestId;
                         Functions.StartNewTimer();
+                        Globals.Contest.contestId = response.data.contestId;
                     } else {
                         alert('Could not create contest !');
                     }
@@ -219,22 +212,22 @@
                     Functions.TogglePlayerList();
                 }
             },
-            RemainingTime: function(current, reference) {
-               var t = reference - current;
+            RemainingTime: function(current, reference, timer) {
+                var t = reference - current;
                 var seconds = Math.floor( (t/1000) % 60 );
                 var minutes = Math.floor( (t/1000/60) % 60 );
                 var hours = Math.floor( (t/(1000*60*60)) % 24 );
-                $Objects.ContestStartTimer.Minutes.html(('0' + minutes).slice(-2));
-                $Objects.ContestStartTimer.Seconds.html(('0' + seconds).slice(-2));
+                if(timer.Hours !== undefined)    timer.Hours.html(('0' + hours).slice(-2));
+                timer.Minutes.html(('0' + minutes).slice(-2));
+                timer.Seconds.html(('0' + seconds).slice(-2));
                 return {'hour': hours, 'min': minutes, 'sec': seconds, 'total': t};
             },
             StartNewTimer: function(){
-                console.log('timing');
                 t.set($('.contest-form'), {display: 'none'});
                 t.set($Objects.ContestStartTimer.Container, {display: 'inline-block'});
                 Globals.contestTimer = setInterval(function(){
                     var ctime = Date.now();
-                    var remaining = Functions.RemainingTime(ctime, Globals.NewContest.Start);
+                    var remaining = Functions.RemainingTime(ctime, Globals.NewContest.Start, $Objects.ContestStartTimer);
                     if(remaining.total < 0) {
                         clearInterval(Globals.contestTimer);
                         $Objects.ContestStartTimer.Minutes.html('00');
@@ -243,12 +236,20 @@
                     }
                 }, 1000);
             },
-            GetTime: function(timeStamp){
-                var min = timeStamp.getMinutes(),
-                    sec = timeStamp.getSeconds(),
-                    hr = timeStamp.getHours();
-                return {'hour': hr, 'min': min, 'sec': sec};
-            } ,
+            StartGameTimer: function(){
+                console.log('timing');
+                Globals.gameTimer = setInterval(function(){
+                    var ctime = Date.now();
+                    var remaining = Functions.RemainingTime(ctime, Globals.NewContest.End, $Objects.GameTimer);
+                    if(remaining.total < 0) {
+                        clearInterval(Globals.gameTimer);
+                        $Objects.GameTimer.Hour.html('00');
+                        $Objects.GameTimer.Minutes.html('00');
+                        $Objects.GameTimer.Seconds.html('00');
+                        Functions.StartGame();
+                    }
+                }, 1000);
+            },
             VerifyContest: function(){
                 //console.log((new Date()).getTime(), Date.now());
                 Globals.NewContest.Name = $('#contest-name-input').val();
@@ -256,6 +257,7 @@
                 Globals.NewContest.Category = $('#contest-category-input').val();
                 var offset = parseInt($('#contest-start-input').val().split(' ')[0]);
                 Globals.NewContest.Start = Date.now() + offset*60*1000;
+                Globals.NewContest.End = Globals.NewContest.Start + 5000*Globals.NewContest.NumberOfQuestions;
                 console.log(Globals.NewContest);
                 if(Globals.NewContest.Name === '' || Globals.NewContest.Category === '-none-')
                 {
@@ -272,13 +274,13 @@
                 $Objects.PlayersInviteList =  [];
                 for(var i = 0; i < data.length; i++){
                     var item = $('<li id="' + data[i].id + '">' + data[i].firstName + ' ' + data[i].lastName + ' </li>')
-                                .bind('click', function(){
-                                    if($(this).attr('class') === undefined || $(this).attr('class') === '')     $(this).addClass('active');
-                                    else {
-                                        $(this).removeClass('active');
-                                        $Objects.ToggleInviteAll[0].checked = false;
-                                    }
-                                });
+                        .bind('click', function(){
+                            if($(this).attr('class') === undefined || $(this).attr('class') === '')     $(this).addClass('active');
+                            else {
+                                $(this).removeClass('active');
+                                $Objects.ToggleInviteAll[0].checked = false;
+                            }
+                        });
                     $Objects.PlayersInviteList.push(item);
                     $Objects.PlayerSelectList.append(item);
                 }
@@ -326,11 +328,11 @@
         };
     $d.ready(function(){
         $Objects.UserName = $('.user-name');
-        Functions.GetParams();
         $Objects.ContestStartTimer = {};
         $Objects.ContestStartTimer.Container = $('#contest-start-timer');
         $Objects.ContestStartTimer.Minutes = $('#contest-start-min');
         $Objects.ContestStartTimer.Seconds = $('#contest-start-sec');
+        Functions.GetParams();
         $Objects.PlayerSelect = $('#select-players');
         $Objects.PlayerSelectList = $Objects.PlayerSelect.find('ul');
         $Objects.ToggleInviteAll = $('#toggle-invite-all')
@@ -346,13 +348,16 @@
         $Objects.PlayerNaviagtion.on('click', Functions.TogglePlayerList);
         $('#close-players-list').on('click', Functions.TogglePlayerList);
 
-        Functions.StartSocket();
-
         $Objects.NextQuestion = $('#next-question')
             .bind('click', Functions.NextQuestion);
         $Objects.PreviousQuestion = $('#previous-question')
             .bind('click', Functions.PreviousQuestion);
         // Cube controls and game object bindings
+        $Objects.GameTimer = {};
+        $Objects.GameTimer.Container = $('#game-timer');
+        $Objects.GameTimer.Hour = $('#game-timer-hour');
+        $Objects.GameTimer.Minutes = $('#game-timer-min');
+        $Objects.GameTimer.Seconds = $('#game-timer-sec');
         $Objects.QuestionHolder = $('#question-holder');
         $Objects.QuestionNumberHolder = $('#question-number');
         $Objects.Cube = $('div.cube');

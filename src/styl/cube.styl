@@ -9,7 +9,7 @@
   box-shadow: inset 1px 1px 0 rgba(220, 172, 0, .1), inset -1px 0 0 rgba(220, 172, 0, .07);
 
 div#game-frame
-  display: none;
+  display: none
   position: relative;
   width: 100vw;
   padding-top: 20px
@@ -148,3 +148,25 @@ figure
       &:hover
         background-color: $White
         color: $Accent1
+
+#game-timer
+  position: absolute
+  top: 150px;
+  right: 30px;
+  font-family: sans-serif;
+  font-weight: 100;
+  text-align: center;
+  font-size: 20px;
+  > div
+    color: #fff;
+    padding: 6px;
+    border-radius: 3px;
+    display: block;
+    > span
+      padding: 10px;
+      border-radius: 3px;
+      display: block;
+    > .label
+      padding-top: 5px;
+      font-size: 10px;
+      color: $Base1

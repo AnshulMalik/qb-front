@@ -22,7 +22,7 @@
             <span id="player-list-button">
                 <div>
                     <span class="mdi mdi-people"></span>
-                    <span class="icon-name">Invitation</span>
+                    <span class="icon-name">Players</span>
                 </div>
             </span>
             <span id="player-stats-button">
@@ -56,6 +56,7 @@
                 </select>
                 <div>When do you want to start?</div>
                 <select title="Category of contest" id="contest-start-input" class="col-sm-12">
+                    <option>1 mins from now</option>
                     <option>2 mins from now</option>
                     <option>5 mins from now</option>
                     <option>10 mins from now</option>
@@ -100,6 +101,20 @@
         <ul id="to-invite"></ul>
     </div>
     <div data-score="Score: 000" data-bonus="Bonus: 000" id="game-frame">
+        <div id="game-timer">
+            <div>
+                <span id="game-timer-hour">--</span>
+                <div class="label">Hours</div>
+            </div>
+            <div>
+                <span id="game-timer-min">--</span>
+                <div class="label">Minutes</div>
+            </div>
+            <div>
+                <span id="game-timer-sec">--</span>
+                <div class="label">Seconds</div>
+            </div>
+        </div>
         <div class="btn-group">
             <span id="previous-question" class="btn mdi mdi-arrow-back"></span><span id="question-number" class="btn"></span><span id="next-question" class="btn mdi mdi-arrow-forward"></span>
         </div>
@@ -118,5 +133,8 @@
         <p style="opacity: 0.5; color: white">Click on the red area and drag to rotate the cube,<br/>Click and drag over the letters to answer</p>
     </div>
 </div>
+<!--<div id="alert-box" class="alert alert-info">-->
+    <!--<p>Hey this is an alert</p>-->
+<!--</div>-->
 </body>
 </html>
