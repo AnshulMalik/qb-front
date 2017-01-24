@@ -25,12 +25,6 @@
                     <span class="icon-name">Players</span>
                 </div>
             </span>
-            <span id="player-stats-button">
-                <div>
-                    <span class="mdi mdi-multiline-chart"></span>
-                    <span class="icon-name">Stats</span>
-                </div>
-            </span>
     </div>
 </nav>
 <div class="profile">
@@ -114,10 +108,10 @@
                 <div class="label">Seconds</div>
             </div>
         </div>
-        <div class="btn-group">
+        <div class="btn-group" id="question-controller">
             <span id="previous-question" class="btn mdi mdi-arrow-back"></span><span id="question-number" class="btn"></span><span id="next-question" class="btn mdi mdi-arrow-forward"></span>
         </div>
-        <h3 id="question-holder"></h3>
+        <h4 id="question-holder"></h4>
         <div id="selected-answer"></div>
         <div class="stage">
             <div class="cube">
@@ -130,8 +124,15 @@
             </div>
         </div>
         <p style="opacity: 0.5; color: white">Click on the red area and drag to rotate the cube,<br/>Click and drag over the letters to answer</p>
-        <div class="game-frame-cover"></div>
+        <div class="game-frame-cover">
+            <span></span>
+        </div>
     </div>
+    <div id="alert-box" class="alert alert-info alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span>&times;</span></button>
+        <span id="alert-body"></span>
+    </div>
+
 </div>
 <!--<div id="alert-box" class="alert alert-info">-->
     <!--<p>Hey this is an alert</p>-->

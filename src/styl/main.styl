@@ -23,6 +23,10 @@ transition(prop, time)
   user-select: none
   list-style: none
 
+button
+  &:focus
+    outline: none
+
 body
   width: 100vw
   height: 100vh
@@ -34,11 +38,11 @@ span.logo
   margin-left: -50px
   &:before, &:after
     position: absolute
-    margin-top: -10px
-    font-size: 4rem
+    margin-top: -6px
+    font-size: 3rem
   &:before
     content: "q"
-    margin-left: -18px
+    margin-left: -16px
     color: $Accent1
   &:after
     color: $Accent2
@@ -46,31 +50,31 @@ span.logo
 
 nav.header
   width: 100vw
-  height: 80px
+  height: 56px
   background-color: $White
   border-bottom: 2px solid $Grey
   text-align: center
   z-index: 1
+  font-size: 10px
   > .nav-controls
-    height: 80px
+    height: 56px
     display: inline-block
     position: relative
     > .brand
       font-weight: 900
-      padding-top: 20px
-      font-size: 20px
+      padding-top: 10px
     > span
       display: inline-block
       text-align: center
-      height: 80px
+      height: 56px
       margin-left: 10px
       margin-right: 10px
       vertical-align: center
       cursor: pointer
       overflow: hidden
       > div
-        padding-top: 15px
-        height: 10px
+        padding-top: 10px
+        height: 5px
         &:after
           content: ""
           height: 2px
@@ -82,7 +86,7 @@ nav.header
         > span
           display: block
         > span.mdi
-          font-size: 30px
+          font-size: 20px
       &:hover
         > div
           color: $Accent2
@@ -177,6 +181,10 @@ div#select-players
       padding-left: 15px
       border-left: 6px solid $Accent1
       border-right: 6px solid $Accent1
+      > .badge
+        float: right
+        padding: 5px
+
 #close-players-list
     float: right;
     font-weight: 600;
@@ -208,4 +216,6 @@ div#select-players
 
 #alert-box
   position: fixed
-  bottom: 0
+  bottom: -80px
+  left: 50%
+  transform: translate(-50%)
