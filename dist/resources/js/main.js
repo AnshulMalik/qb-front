@@ -57,14 +57,16 @@
             ShowAlert: function(string){
                 $Objects.AlertBox.find('#alert-body').html(string);
                 t.fromTo($Objects.AlertBox, 0.5, {
-                    bottom: '-70px'
+                    bottom: '-100px'
                 }, {
-                    bottom: 0
+                    bottom: 0,
+                    ease: Back.easeIn
                 });
             },
             DismissAlert: function(){
                 t.to($Objects.AlertBox, 0.5, {
-                    bottom: '-70px'
+                    bottom: '-100px',
+                    ease: Back.easeIn
                 });
             },
             //cube control and game rules script
@@ -106,9 +108,7 @@
                                 $Objects.SelectedAnswerDisplay.append('<span>'+ ch +'</span>');
                             }
                         });
-                        setTimeout(function(i, item){
-                            $($Objects.CubeFaces[i]).append(item);
-                        }, 100);
+                        $($Objects.CubeFaces[i]).append(item);
                     }
                 }
                 t.to($Objects.Cube, 0.5, {
@@ -145,7 +145,7 @@
                     Globals.socket.emit('submit-answer', {questionId: GameVar.Questions[GameVar.CurrentQuestion].id, text: answer.y + ',' + answer.x + ',' + answer.string, contestId: Globals.Contest.contestId});
                 }
                 else {
-                    //console.log(GameVar.Questions[GameVar.CurrentQuestion]['words'].indexOf(answer));
+                    Functions.ShowAlert('<strong>Incorrect </strong>selection');
                 }
             },
             NextQuestion: function(){
@@ -237,7 +237,7 @@
                         Functions.StartNewTimer();
                         Globals.Contest.contestId = response.data.contestId;
                     } else {
-                        Functions.ShowAlert('<strong>Error!</strong> Could not create contest!!');
+                        Functions.ShowAlert('<strong>Error! </strong>Could not create contest!!');
                     }
                 });
 
@@ -257,13 +257,13 @@
                         if(data.data.type === 'answer') {
                             GameVar.Score = data.data.newScore;
                             $Objects.GameFrame.attr('data-score', 'Score: ' + GameVar.Score);
-                            Functions.ShowAlert("<strong>Congratulations!</strong>Found the correct Answer!!");
+                            Functions.ShowAlert("<strong>Congratulations! </strong>Found the correct Answer!!");
                         } else if(data.data.type === 'bonus'){
                             GameVar.Score = data.data.newScore;
                             $Objects.GameFrame.attr('data-score', 'Score: ' + GameVar.Score);
-                            Functions.ShowAlert("<strong>Wow!</strong>Found the bonus word!!");
+                            Functions.ShowAlert("<strong>Wow! </strong>Found the bonus word!!");
                         } else {
-                            console.log('Not answered');
+                            Functions.ShowAlert("<strong>Sorry! </strong>Answer already submitted!!");
                         }
                     } else{
 
@@ -367,8 +367,6 @@
                 Functions.TogglePlayerList();
             },
             //Function to list players who have joined the contest, called on 'join-contest-complete'
-            ListPlayers: function(data){
-            },
             ChangeLeaderBoard: function(data){
                 $Objects.PlayerSelectList = $Objects.PlayerSelect.find('ul');
                 $Objects.PlayerSelectList.html('');
@@ -525,7 +523,7 @@
                 }
             });
         $d.mousedown(function(event){
-            if(Globals.isPLayerListOpen && event.target.closest('#select-player').length === 0)
+            if(Globals.isPLayerListOpen && event.target.closest('#select-players').length === 0)
                 Functions.TogglePlayerList();
         });
         $d.mouseup(function() {
