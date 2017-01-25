@@ -40,6 +40,7 @@
             },
             InviteList: [],
             isPLayerListOpen: false,
+            isGameStarted: false,
             contestTimer: -1,
             Winner: {
                 name: '',
@@ -225,9 +226,9 @@
                     opacity: 1,
                     scale: 1
                 });
+                Globals.Contest.isGameStarted = true;
                 Globals.socket.emit('get-leaderboard', {contestId: Globals.Contest.contestId});
-                $Objects.PlayerSelect = $('#select-players');
-                $Objects.PlayerSelect.html('<h3>Scores</h3><ul></ul>');
+                $Objects.PlayerSelect.find('h3').html('Scores');
                 Globals.socket.emit('get-questions', {contestId: Globals.Contest.contestId});
                 Globals.socket.on('get-questions-complete', Functions.GetAllQuestions);
             },
@@ -394,14 +395,21 @@
                 if(!Globals.isPLayerListOpen){
                     t.to($Objects.PlayerSelect, 0.5, {
                         left: 0,
+                        opacity: 1,
                         onComplete: function(){
                             Globals.isPLayerListOpen = true;
                         }
                     });
+                    setTimeout(function(){
+                        if(Globals.isGameStarted && Globals.isPLayerListOpen) {
+                            Functions.TogglePlayerList();
+                        }
+                    }, 1000);
                 }
                 else {
                     t.to($Objects.PlayerSelect, 0.5, {
                         left: '-320px',
+                        opacity: 0,
                         onComplete: function(){
                             Globals.isPLayerListOpen = false;
                         }
