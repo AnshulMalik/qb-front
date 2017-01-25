@@ -260,7 +260,8 @@ div#select-players > ul > li.active > .badge {
 }
 #alert-box {
   position: fixed;
-  bottom: -80px;
+  bottom: -150px;
+  opacity: 0;
   left: 50%;
   -webkit-transform: translate(-50%);
   -moz-transform: translate(-50%);

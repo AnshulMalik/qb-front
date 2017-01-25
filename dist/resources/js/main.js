@@ -57,15 +57,18 @@
             ShowAlert: function(string){
                 $Objects.AlertBox.find('#alert-body').html(string);
                 t.fromTo($Objects.AlertBox, 0.5, {
-                    bottom: '-100px'
+                    bottom: '-150px',
+                    opacity: 0
                 }, {
                     bottom: 0,
+                    opacity: 1,
                     ease: Back.easeIn
                 });
             },
             DismissAlert: function(){
                 t.to($Objects.AlertBox, 0.5, {
-                    bottom: '-100px',
+                    bottom: '-150px',
+                    opacity: 0,
                     ease: Back.easeIn
                 });
             },
