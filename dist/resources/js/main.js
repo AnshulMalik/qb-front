@@ -275,7 +275,7 @@
                 });
 
                 Globals.socket.on('user-joined', function(data){
-                    Functions.ShowAlert('user joined ' + data.data);
+                    Functions.ShowAlert('<strong>'data.data.firstName + ' ' + data.data.lastName + '</strong> just joined this game');
                 });
                 //Globals.socket.on('install-required', Functions.Display);
                 //Globals.socket.on('message', Functions.Display);
