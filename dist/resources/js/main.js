@@ -71,6 +71,7 @@
             },
             //cube control and game rules script
             InitializeCube : function(){
+                Functions.DismissAlert();
                 t.fromTo($Objects.QuestionHolder, 0.5, {
                     scale: 1,
                     top: '0px',
@@ -145,7 +146,7 @@
                     Globals.socket.emit('submit-answer', {questionId: GameVar.Questions[GameVar.CurrentQuestion].id, text: answer.y + ',' + answer.x + ',' + answer.string, contestId: Globals.Contest.contestId});
                 }
                 else {
-                    Functions.ShowAlert('<strong>Incorrect </strong>selection');
+                    Functions.ShowAlert('<strong>Sorry! </strong>Keep looking!');
                 }
             },
             NextQuestion: function(){
@@ -271,7 +272,7 @@
                 });
 
                 Globals.socket.on('user-joined', function(data){
-                    console.log('user joined', data.data);
+                    Functions.ShowAlert('user joined ' + data.data);
                 });
                 //Globals.socket.on('install-required', Functions.Display);
                 //Globals.socket.on('message', Functions.Display);

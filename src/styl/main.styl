@@ -23,6 +23,14 @@ transition(prop, time)
   user-select: none
   list-style: none
 
+::-webkit-scrollbar
+  background-color: transparent;
+  width: 5px
+
+::-webkit-scrollbar-thumb
+  background-color: $Accent1;
+  width: 5px
+
 button
   &:focus
     outline: none
@@ -184,14 +192,18 @@ div#select-players
       > .badge
         float: right
         padding: 5px
+        background-color: $Base3
+        color: $Accent1
 
 #close-players-list
-    float: right;
-    font-weight: 600;
-    font-size: 30px;
-    cursor: pointer
-    &:hover
-      color: $Accent2
+  position: absolute
+  right: 20px
+  top: 5px
+  font-weight: 600;
+  font-size: 30px;
+  cursor: pointer
+  &:hover
+    color: $Accent2
 
 #contest-start-timer
   font-family: sans-serif;

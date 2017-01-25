@@ -8,6 +8,14 @@
   user-select: none;
   list-style: none;
 }
+::-webkit-scrollbar {
+  background-color: transparent;
+  width: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #ee6055;
+  width: 5px;
+}
 button:focus {
   outline: none;
 }
@@ -212,9 +220,13 @@ div#select-players > ul > li.active {
 div#select-players > ul > li.active > .badge {
   float: right;
   padding: 5px;
+  background-color: #ddfff7;
+  color: #ee6055;
 }
 #close-players-list {
-  float: right;
+  position: absolute;
+  right: 20px;
+  top: 5px;
   font-weight: 600;
   font-size: 30px;
   cursor: pointer;
